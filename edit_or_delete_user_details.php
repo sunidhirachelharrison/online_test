@@ -13,7 +13,18 @@
     {
         header("location:index.php");
     }
-    
+
+$rollno="";
+$name="";
+$usertype="";
+$program="";
+$year="";
+$section="";
+$branch="";
+$mobno=""; 
+$emailid="";
+$uregtime="";
+
 	
 ?>
 
@@ -56,7 +67,7 @@
                 <div class="col-sm-12 p-4" style="background:#e9ecef">
 
                     Enter the name or enrollment no/employee ID:
-                    <input type="text" name="uname" id="uname" class="form-control" />
+                    <input type="text" name="uname" id="uname" value="<?php echo htmlspecialchars($_POST['uname'] ?? '', ENT_QUOTES); ?>" class="form-control" />
                     <input type="submit" class="btn aa mt-3" name="search" value="SEARCH" id="search" onclick="" /><br />
 
                     <?php
@@ -87,6 +98,17 @@
                             $u_reg_date=date_format($obj,"d F Y");
                                 
                             
+                                $rollno=$row1['U_Enrollment_No'];
+                                $name=$row1['U_Name'];
+                                $usertype=$row1['U_User_Type'];
+                                $program=$row1['U_Program'];
+                                $year=$row1['U_Year'];
+                                $section=$row1['U_Section'];
+                                $branch=$row1['U_Branch'];
+                                $mobno=$row1['U_Mobile_No']; 
+                                $emailid=$row1['U_Email_ID'];
+                                $uregtime=$row1['U_Registration_Time']
+                                
                             ?>
 
 
@@ -142,7 +164,7 @@
                     ?>
 
 
-                    <input type="button" class="btn aa mt-3" name="edit" value="EDIT" id="edit" onclick="getText(this.id);" />
+                    <input type="button" class="btn aa mt-3" name="edit" value="EDIT" id="edit" onclick="edit_details();" />
 
 
                     <input type="submit" class="btn aa mt-3" name="delete" value="DELETE" id="delete" />
@@ -154,10 +176,10 @@
 
             </div>
 
-            <!--        </form>-->
+        </form>
 
 
-            <?php  
+        <?php  
 
 
 	//on clicking delete i.e. DELETE button
@@ -183,10 +205,47 @@
     ?>
 
 
+        <form action="#" method="post" name="form2" id="form2" enctype="multipart/form-data">
+            <div id="fields" class="mt-5" style="visibility:hidden;">
 
-            <div id="fields" style="visibility:hidden;">
 
-                Description: <input type='text' class='form-control' id='description' name='description' /><br /><input type='submit' name='save' class='btn aa' value='SAVE' />
+                <label for="enrollmentno"><b>Enrollment No:</b></label>
+                <input type="text" class="form-control" name="enrollmentno" value="<?php  echo $rollno;  ?>" disabled /><br />
+
+                <label for="name"><b>Full Name.:</b></label>
+                <input type="text" class="form-control" name="name" value="<?php  echo $name;  ?>" /><br />
+
+                <label for="program"><b>Program:</b></label>
+                <input type="text" class="form-control" name="program" value="<?php  echo $program;  ?>" /><br />
+
+                <label for="year"><b>year:</b></label>
+                <input type="text" class="form-control" name="year" value="<?php  echo $year;  ?>" /><br />
+
+                <label for="section"><b>Section :</b></label>
+                <input type="text" class="form-control" name="section" value="<?php   echo $section;  ?>" /><br />
+
+                <label for="branch"><b>Branch :</b></label>
+                <input type="text" class="form-control" name="branch" value="<?php  echo $branch;  ?>" /><br />
+
+
+                <label for="mobile_no"><b>Mobile No :</b></label>
+                <input type="tel" class="form-control" name="mobile_no" value="<?php  echo $mobno;  ?>" /><br />
+
+                <label for="email_ID"><b>Email ID :</b></label>
+                <input type="email" class="form-control" name="email_ID" value="<?php  echo $emailid;  ?>" /><br />
+
+
+                <label for="reg_date"><b>Registration Date :</b></label>
+                <input type="text" class="form-control" name="reg_date" value="<?php  echo $u_reg_date;  ?>" disabled /><br />
+
+                <label for="reg_time"><b>Registration Time :</b></label>
+                <input type="text" class="form-control" name="reg_time" value="<?php  echo $uregtime;  ?>" disabled /><br />
+                <?php
+//                        }
+                ?>
+
+                <input type="submit" class="btn aa" name="update" value="UPDATE DETAILS" />
+
 
 
             </div>
@@ -199,26 +258,43 @@
 
 //}
 
- if(isset($_POST['save']))
+ if(isset($_POST['update']))
 {
     
+    $enrollmentno=$_POST['enrollmentno'];
+    $fullname=$_POST['name'];
+    $prog=$_POST['program'];
+    $yr=$_POST['year'];
+    $sec=$_POST['section'];
+    $ubranch=$_POST['branch'];
+    //$session=$_POST['session'];
+    $mobileno=$_POST['mobile_no'];
+    $uemailid=$_POST['email_ID'];
     
-    $i_id=$_POST['i_id'];		//selected value from dropdown list
-    $i_description=$_POST['description'];
-    $q4="UPDATE instructions SET I_Description='".$i_description."' WHERE I_ID='".$i_id."'";
-    $re4=mysqli_query($con,$q4);
-    if(!($re4))
+     echo '<script>alert('.$enrollmentno.');</script>';
+     
+    $sql="UPDATE user SET U_Enrollment_No='".$enrollmentno."',U_Name='".$fullname."', U_Program='".$prog."', U_Year='".$yr."', U_Section='".$sec."', U_Branch='".$ubranch."',U_Mobile_No='".$mobileno."' ,U_Email_ID='".$uemailid."' WHERE U_Enrollment_No='".$enrollmentno."'";
+                        
+//    $sql="UPDATE `user` SET `U_Enrollment_No`=[$enrollmentno],`U_Name`=[$fullname],`U_Program`=[$prog],`U_Year`=[$yr],`U_Section`=[$sec],`U_Branch`=[$ubranch],`U_Mobile_No`=[$mobileno],`U_Email_ID`=[$uemailid] WHERE U_Enrollment_No='".$rollno."'";               
+                        
+    $check=mysqli_query($con,$sql);
+
+    if($check)
     {
-        //echo '<script>alert("Instruction editing failed!");</script>';
+    echo '<script>
+        alert("Details Updated Successfully!");
+    </script>' . '<br />';
     }
     else
     {
-        echo '<script>alert("Instruction updated successfully!");</script>';
+    echo '<script>
+        alert("Details updation failed!");
+    </script>' . '<br />';
     }
 
     
 }
-
+        
 
 ?>
 
@@ -230,28 +306,24 @@
 </html>
 
 
-<!--
 <script>
-    function edit_instruction() {
+    function edit_details() {
 
         document.getElementById('fields').style.visibility = 'visible';
         //var count = document.getElementById("field_count");
-        // var d = document.getElementById("fields");
+        //        var d = document.getElementById("fields");
 
         //document.getElementById("add").disable=true;
 
-        //  d.innerHTML = "<br />Description: <input type='text' class='form-control' name='description' value='<?php //echo $i_description; ?>' required/><br/><input type='submit' name='save' class='btn aa' value='SAVE'/>";
+        //        d.innerHTML = "<label for='enrollmentno'><b>Enrollment No:</b></label> <input type = 'text' class = 'form-control' name = 'enrollmentno' value = '<?php  //echo $r['U_Enrollment_No'];  ?>' /><br/><label for = 'name' > < b > Full Name.: < /b></label ><input type = 'text'  class = 'form-control' name = 'name' value = '<?php  //echo $r['U_Name'];  ?>' / > < br / ><label for = 'program' > < b > Program: < /b></label ><   input type = 'text' class = 'form-control' name = 'program' value = '<?php  //echo $r['U_Program'];  ?>' / > < br / ><label for = 'year' > < b > year: < /b></label ><input type = 'text' class = 'form-control' name = 'year' value = '<?php  //echo $r['U_Year'];  ?>' / > < br / ><label for = 'section' > < b > Section: < /b></label ><input type = 'text' class = 'form-control' name = 'section' value = '<?php  //echo $r['U_Section'];  ?>' / > < br / ><label for = 'branch' > < b > Branch: < /b></label ><input type = 'text' class = 'form-control' name = 'branch'  value = '<?php  //echo $r['U_Branch'];  ?>' / > < br / >";
+
+        //        d.innerHTML = "<br />Enrollment No: <input type='text' class='form-control' name='enrno' value='<?php //echo $_POST['uname']; ?>' required/><br />Name: <input type='text' class='form-control' name='description' value='<?php //echo $_POST['uname']; ?>' required/><br/><input type='submit' name='save' class='btn aa' value='SAVE'/>";
 
         //        document.getElementById("delete").disabled = true;
 
     }
-</script>
--->
-
-<script>
-    function getText(element) {
-        var textHolder = document.getElementById(element).text;
-        document.getElementById("description").value = textHolder;
-    }
 
 </script>
+
+<!--
+/-->

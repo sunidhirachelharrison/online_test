@@ -88,6 +88,7 @@
 
     <!--<fieldset id="options" name="options">-->
 
+
     <input type="radio" id="A" name="options" onclick="SaveOption()" value="<?php echo $answers[0]; ?>" /><?php echo $answers[0]."<br/>";
                 if($images[$a]!='')
                 {
@@ -117,12 +118,16 @@
                 {
                   echo "<img src='uploads/{$images["$d"]}'><br/><br/>";
                 }
-                   
+                  
+            
+            
             ?>
 
+
     <input type="radio" id="E" name="options" onclick="SaveOption()" value="<?php echo $answers[4]; ?>" /><?php echo $answers[4] ."<br/>";
-                if($images[$e]!='')
-                {
+            
+            if($images[$e]!='')        
+            {
                   echo "<img src='uploads/{$images["$e"]}'><br/><br/>";
                 }
                    

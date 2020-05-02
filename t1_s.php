@@ -11,7 +11,7 @@
 
 
     include("DB_connect.php");  //for database connection
-          //for timer display on top of the page
+    include("timer1.php");      //for timer display on top of the page
       
         //select 35 questions from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
         $sql="SELECT * FROM questions WHERE Q_Flag='0' limit 35";
@@ -25,36 +25,15 @@
         {
             $qu=array();    //array to store fetched questions
             $i=0;           //counter to store questions in array $qu
-            $strng="";        //variable to store question ids as a sequence of string to be stored for state management
             while($r=mysqli_fetch_assoc($row))
             {
                 $qu[$i]=$r['Q_ID'];     //fetch ques. and store in array $qu
                 $i++;                   //increment counter
-                
             }
             //print_r($qu);
             shuffle($qu);       //shuffle the order of the questions
             //print_r($qu);
             
-        //***********************************************************
-            //storing question ids in state table sequence-wise
-            $zz=0;
-            foreach($qu as $st)
-            {
-                if($zz==0)
-                {
-                    $strng=$strng."".$st;
-                }
-                else
-                {
-                    $strng=$strng."+".$st;
-                }
-                $zz++;
-            }
-            $q_state="INSERT INTO `state`(`S_ID`, `S_AttemptedQ_IDs`, `S_MarkedQ_IDs`, `S_AttemptedQ_count`, `S_MarkedQ_count`, `S_Timer_info`, `S_Enrollment_No`, `S_Displayed_Q_IDs`, `S_Current_QNo`, `S_Red_Btns`, `S_Green_Btns`, `S_Purple_Btns`, `S_Yellow_Btns`) VALUES (null,null,null,0,0,'0:0','".$_SESSION['U_Enrollment_No']."','".$strng."',null,null,null,null,null)";
-            $q_check=mysqli_query($con,$q_state);
-
-        //************************************************************
             
         }
 
@@ -85,19 +64,20 @@
 <html>
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link rel="shortcut icon" href="image/tmu.png">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-
+    <title>NETCAMP || TEST YOUR SKILL </title>
+    <link rel="stylesheet" href="css1/bootstrap.min.css" />
+    <link rel="stylesheet" href="css1/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="css1/main.css">
+    <link rel="stylesheet" href="css1/font.css">
+    <script src="js/jquery.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
 
-    <!-- title -->
-    <title>Main Test</title>
+    <script src="js1/bootstrap.min.js" type="text/javascript"></script>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <!--alert message-->
     <style>
         .aaa {
             height: 150%;
@@ -157,15 +137,6 @@
             margin-right: 80px;
         }
 
-        body {
-            background: #e9ecef;
-        }
-
-        .bl {
-            background: #fff;
-            height: 96%;
-        }
-
         #txtHint {
             padding: 25px;
         }
@@ -184,26 +155,20 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
-                document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
+                document.getElementById(counter).style.background = '#FF0000';
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else {
                 document.getElementById(counter).style.background = '#FF0000';
-                store_btn_color_state(counter, "red");
             }
             //            
             //            saveResult(marked_value,qid);
@@ -346,37 +311,31 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 //$(button).find(".glyphicon").addClass("glyphicon-ok");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else {
                 document.getElementById(counter).style.background = '#EE82EE';
-                store_btn_color_state(counter, "purple");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             }
@@ -435,126 +394,205 @@
 
     </script>
 
-    <script>
-        function store_btn_color_state(btn_number, btn_color) {
-
-            var reid = <?php echo json_encode($_SESSION['U_Enrollment_No']); ?>;
-
-            var pass_data = {
-                'btn_number': (btn_number + 1),
-                'btn_color': btn_color,
-                'rollno': reid,
-            };
-            //alert(pass_data);
-            $.ajax({
-                url: "update_btn_color_state_in_db.php",
-                type: "POST",
-                data: pass_data,
-                success: function(data) {}
-            });
-            return false;
-
-        }
-
-    </script>
-
 </head>
 
 <body>
+    <div class="jumbotron" style="margin-bottom:0; padding: 1rem 1rem;"> <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
 
-    <!-- TMU Logo with Header -->
-    <div class="jumbotron" style="margin-bottom:0; padding: 1rem 1rem;">
-        <div class="row">
-            <div class="col-12 col-lg-4 align-self-start">
-                <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
-            </div>
-            <div class="col-12 col-lg-4 align-self-center"><br>
-                <div class="text-center"><b><?php echo $tname . "<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
-            </div>
-            <div class="col-12 col-lg-4 text-center align-self-end"><br>
-                <div class=""><b><?php include("timer1.php"); ?></b></div>
-            </div>
-        </div>
+        <header class="text-center"><b>
+                <?php echo $tname . "<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?>
+                <!--            <img src="image/logo_uni.png" class="img-fluid float-right" width="200" alt="tmu logo" />-->
+            </b>
+        </header>
+
     </div>
 
-    <!-- navbar -->
-    <div class="navbar  navbar-default bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Center for Teaching, Learning & Development</a>
-        <a class="navbar-brand pull-right" href="#"><i><?php echo $_SESSION['U_Name'] ." (" . $_SESSION['U_Enrollment_No'] .")";  ?></i></a>
+    <!--
+    <div class="jumbotron text-right" style="margin-bottom:0; padding: 1rem 1rem;">
+        hello
     </div>
+-->
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="">Center for Teaching, Learning & Development<?php echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  . $_SESSION['U_Name'] . " ( " . $_SESSION['U_Enrollment_No'] . ")";  ?></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+    </nav>
+
+    <!--
+<div class="header">
+<div class="row">
+<div class="col-lg-6">
+<span class="logo"><img src="images/tmu.png" width="11%"/></span></div>
+<div class="col-md-4 col-md-offset-2">
+
+</div>
+</div></div>
+<div class="bg">
+-->
+
+    <!--navigation menu-->
+    <!--
+<nav class="navbar navbar-default title1">
+  <div class="container-fluid">
+     Brand and toggle get grouped for better mobile display 
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><b>CTLD</b></a>
+    </div>
+-->
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <!--    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+    <!--
+      <ul class="nav navbar-nav">
+        <li><a href="account.php?q=1"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Home<span class="sr-only">(current)</span></a></li>
+        <li><a href="account.php?q=2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&nbsp;History</a></li>
+		<li><a href="account.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Ranking</a></li></ul>
+-->
+    <!--</div><!-- /.navbar-collapse -->
+    <!--</div><!-- /.container-fluid -->
+    <!--</nav>-->
+    <!--navigation menu closed-->
 
     <div class="container-fluid">
+
+        <!--
         <div class="row">
-            <div class="col-lg-8">
-
-                <div class="container bl mt-3">
-                    <div class="row">
-                        <div class="col-lg-12 col-12">
-                            <div id="txtHint"><b>Question and options will be listed here...</b></div>
-                        </div>
-                        <div class="col-12 col-lg-12 col-sm-12">
-                            <form action="thankyou_page.php" method="post" class="button_set">
-                                <input type="button" class="previous c" id="previous" name="previous" value="PREVIOUS" onclick="show_previous()" />
-                                <input type="button" id="marked" class="c" name="marked" value="MARK FOR REVIEW" onclick="mark_for_review();" />
-                                <button name="submit" id="submit" style="visibility:hidden" onclick="done();" class="btn-danger float-right d">SUBMIT</button>
-                                <input type="button" class="next float-right c mr-1" id="next" name="next" value="NEXT" onclick="increment()" />
-                            </form>
-                        </div>
+            <div class="col-md-8">
+                <nav class="navbar navbar-default title1 aaa">
+                    <div class="container float-center">
+                        <?php //echo $tname . "<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?>
                     </div>
-                </div>
-
-            </div>
-            <div class="col-lg-4">
-
-                <div class="container mt-3 bl">
-                    <div class="row">
-                        <div class="col-lg-12 col-12">
-                            <div class="container">
-                                <div class="row">
-                                    <?php 
-                    for($z=1;$z<=35;$z++)
-                    {
-                ?>
-                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==35){
-                ?>
-                document.getElementById('submit').style.visibility = 'visible';
-        
-                <?php
-                    }
-                    else
-                    {
-                ?>document.getElementById('submit').style.visibility = 'hidden';
-
-                <?php
-                    }  ?>
-                window.counter=<?php echo ($z-1); ?>;showQuestion(selected_qid[window.counter],window.counter);">&nbsp;<?php echo $z; ?>&nbsp;</Button></div>
-
-                                    <?php
-                    }
-                ?>
-
-                                </div>
-                            </div>
-                            <br>
-                            <img src="image/instructions.jpg" class="img-fluid pb-3" width=100% height=190>
-
-                        </div>
-                    </div>
-                </div>
-
+                </nav>
             </div>
         </div>
+-->
+
+        <div class="row">
+            <div class="col-md-8">
+                <nav class="navbar navbar-default title1 aaaa fle">
+                    <div class="aa">
+                        <div id="txtHint"><b>Question and options will be listed here...</b></div>
+
+
+                    </div>
+                </nav>
+
+            </div>
+            <div class="col-md-4">
+                <nav class="navbar navbar-default title1 aaaa">
+                    <!--
+				<div class="aa1">
+					</br>
+-->
+                    <!--
+                    <div>
+                        <img src="image/not_visited.png" class="img-fluid" width="80" alt="" />not visited
+
+
+
+                        <img src="image/not_answered_and_marked_for_review.png" class="img-fluid" width="80" alt="" />marked for review
+                    </div>
+
+
+                    <div>
+                        <img src="image/answered.png" class="img-fluid" width="80" alt="" />answered
+
+                        <img src="image/answered_and_marked_for_review.png" class="img-fluid" width="80" alt="" />answered and marked for review
+                    </div>
+
+                    <div>
+                        <img src="image/visited_and_not_answered.png" class="img-fluid" width="80" alt="" />not answered
+                    </div>-->
+
+
+
+                    <div class="container">
+
+                        <div class="row">
+
+
+                            <?php 
+                                
+                                for($z=1;$z<=35;$z++)
+                                {
+                                    ?>
+
+                            <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip " onclick="<?php if($z==35){
+                                    ?>
+                                    
+                                    document.getElementById('submit').style.visibility = 'visible';
+                                    
+                                    <?php
+                                    }
+                                    else
+                                    {
+                                        ?>document.getElementById('submit').style.visibility = 'hidden';
+
+                                    <?php
+                                    }  ?>
+                                 window.counter=<?php echo ($z-1); ?>;showQuestion(selected_qid[window.counter],window.counter);">&nbsp;<?php echo $z; ?>&nbsp;</Button></div>
+
+                            <?php
+                                }
+                            
+                            ?>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </nav>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-8">
+                <form action="thankyou_page.php" method="post" class="button_set">
+
+                    <input type="button" class="previous c p-2 ml-5" id="previous" name="previous" value="PREVIOUS" onclick="show_previous()">
+
+                    <!--                       <input type="button" class="save" id="save" name="save" value="SAVE" >-->
+
+
+                    <input type="button" id="marked" class="c p-2 ml-5" name="marked" value="MARKED FOR REVIEW" onclick="mark_for_review();" />
+                    <button name="submit" id="submit" style="visibility:hidden" onclick="done();" class="btn btn-danger float-right d p-2 mr-5">SUBMIT</button>
+
+                    <input type="button" class="next float-right c p-2 mr-5" id="next" name="next" value="NEXT" onclick="increment()">
+
+
+
+                    <!--                    <br>-->
+                </form>
+            </div>
+        </div>
+
+
     </div>
 
-    <!-- <footer class="mt-5 pt-5">
+    <footer class="mt-5 pt-5">
         <div class="text-center p-5">
             <p>Copyright &copy; Teerthanker Mahaveer University</p>
         </div>
-    </footer> -->
+    </footer>
+
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
+    <!--    </div>-->
 </body>
 
 </html>
@@ -666,26 +704,3 @@
     }, false);
 
 </script>
-
-<!--
-<script>
-    setInterval(function() {
-        var rollno = <?php //echo json_encode($_SESSION['U_Enrollment_No']); ?>;
-        var pass_data = {
-            'mins': minutes,
-            'secs': seconds,
-            'rollno': rollno,
-        };
-        //        alert(pass_data);
-        $.ajax({
-            url: "update_time_in_db.php",
-            type: "POST",
-            data: pass_data,
-            success: function(data) {}
-        });
-        //        return false;
-
-    }, 1000);
-
-</script>
--->

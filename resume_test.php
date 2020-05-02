@@ -11,52 +11,82 @@
 
 
     include("DB_connect.php");  //for database connection
-          //for timer display on top of the page
-      
-        //select 35 questions from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
-        $sql="SELECT * FROM questions WHERE Q_Flag='0' limit 35";
+         
+    $q_fetch_qids="SELECT * FROM state WHERE S_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
+    $q_check=mysqli_query($con,$q_fetch_qids);
+    $str="";
+    $red_btns="";
+    $green_btns="";
+    $yellow_btns="";
+    $purple_btns="";
+    if($q_check)
+    {
+        $q_val=mysqli_fetch_assoc($q_check);
+        $str=$q_val['S_Displayed_Q_IDs'];
+        $red_btns=$q_val['S_Red_Btns'];
+        $green_btns=$q_val['S_Green_Btns'];
+        $yellow_btns=$q_val['S_Yellow_Btns'];
+        $purple_btns=$q_val['S_Purple_Btns'];
+       
+    }
+
+    //retrieving button numbers from string sequence to color the buttons on question palette
+    $red_btns=str_replace("+"," ",$red_btns);
+    $red_btns=explode(" ",$red_btns);
+
+    $green_btns=str_replace("+"," ",$green_btns);
+    $green_btns=explode(" ",$green_btns);
+
+    $yellow_btns=str_replace("+"," ",$yellow_btns);
+    $yellow_btns=explode(" ",$yellow_btns);
+
+    $purple_btns=str_replace("+"," ",$purple_btns);
+    $purple_btns=explode(" ",$purple_btns);
+
+
+    $string_ids=str_replace("+"," ",$str);
+    $temp=explode(" ",$string_ids);
+    $qu=array();    //array to store fetched questions
+    $i=0;           //counter to store questions in array $qu
+    foreach($temp as $temp1)
+    {
+        
+    
+        //select each question from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
+        $sql="SELECT * FROM questions WHERE  Q_ID='".$temp1."' and Q_Flag='0'";
         $row=mysqli_query($con,$sql);
         
         if(!($row))
         {
-            echo '<script>alert("Error in fetching questions!");</script>';
+//            echo '<script>alert("Error in fetching question!");</script>';
         }
         else
         {
-            $qu=array();    //array to store fetched questions
-            $i=0;           //counter to store questions in array $qu
-            $strng="";        //variable to store question ids as a sequence of string to be stored for state management
-            while($r=mysqli_fetch_assoc($row))
-            {
-                $qu[$i]=$r['Q_ID'];     //fetch ques. and store in array $qu
-                $i++;                   //increment counter
-                
-            }
+           
+//            $strng="";        //variable to store question ids as a sequence of string to be stored for state management
+            $r=mysqli_fetch_assoc($row);
+            
+            $qu[$i]=$r['Q_ID'];     //fetch ques. and store in array $qu
+            $i++;                   //increment counter
+
+            
             //print_r($qu);
-            shuffle($qu);       //shuffle the order of the questions
+//            shuffle($qu);       //shuffle the order of the questions
             //print_r($qu);
             
         //***********************************************************
             //storing question ids in state table sequence-wise
-            $zz=0;
-            foreach($qu as $st)
-            {
-                if($zz==0)
-                {
-                    $strng=$strng."".$st;
-                }
-                else
-                {
-                    $strng=$strng."+".$st;
-                }
-                $zz++;
-            }
-            $q_state="INSERT INTO `state`(`S_ID`, `S_AttemptedQ_IDs`, `S_MarkedQ_IDs`, `S_AttemptedQ_count`, `S_MarkedQ_count`, `S_Timer_info`, `S_Enrollment_No`, `S_Displayed_Q_IDs`, `S_Current_QNo`, `S_Red_Btns`, `S_Green_Btns`, `S_Purple_Btns`, `S_Yellow_Btns`) VALUES (null,null,null,0,0,'0:0','".$_SESSION['U_Enrollment_No']."','".$strng."',null,null,null,null,null)";
-            $q_check=mysqli_query($con,$q_state);
+//            foreach($qu as $st)
+//            {
+//                $strng=$strng."+".$st;
+//            }
+//            $q_state="INSERT INTO `state`(`S_ID`, `S_AttemptedQ_IDs`, `S_MarkedQ_IDs`, `S_AttemptedQ_count`, `S_MarkedQ_count`, `S_Timer_info`, `S_Enrollment_No`, `S_Displayed_Q_IDs`, `S_Button_Nos`) VALUES (null,null,null,0,0,'0','".$_SESSION['U_Enrollment_No']."','".$strng."',null)";
+//            $q_check=mysqli_query($con,$q_state);
 
         //************************************************************
             
         }
+    }
 
         $query1="SELECT * FROM test WHERE T_Flag='0'";
         $r1=mysqli_query($con,$query1);
@@ -76,7 +106,11 @@
             $obj=new DateTime($tdate);
             $tdate=date_format($obj,"d F Y");
         }
-                      
+//***********************************************************************************
+
+//    $fetch_btn_colors="SELECT * FROM"
+
+//***********************************************************************************
 
 ?>
 
@@ -184,26 +218,20 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
-                store_btn_color_state(counter, "green");
             } else {
                 document.getElementById(counter).style.background = '#FF0000';
-                store_btn_color_state(counter, "red");
             }
             //            
             //            saveResult(marked_value,qid);
@@ -346,37 +374,31 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 //$(button).find(".glyphicon").addClass("glyphicon-ok");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
-                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else {
                 document.getElementById(counter).style.background = '#EE82EE';
-                store_btn_color_state(counter, "purple");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             }
@@ -430,29 +452,6 @@
 
             //}
 
-
-        }
-
-    </script>
-
-    <script>
-        function store_btn_color_state(btn_number, btn_color) {
-
-            var reid = <?php echo json_encode($_SESSION['U_Enrollment_No']); ?>;
-
-            var pass_data = {
-                'btn_number': (btn_number + 1),
-                'btn_color': btn_color,
-                'rollno': reid,
-            };
-            //alert(pass_data);
-            $.ajax({
-                url: "update_btn_color_state_in_db.php",
-                type: "POST",
-                data: pass_data,
-                success: function(data) {}
-            });
-            return false;
 
         }
 
@@ -666,6 +665,46 @@
     }, false);
 
 </script>
+
+<script>
+    window.onload = color_btns(); //color the btns on page load using saved state of btns
+
+    function color_btns() {
+
+        var $red_btns = <?php echo json_encode($red_btns); ?>;
+        var $green_btns = <?php echo json_encode($green_btns); ?>;
+        var $yellow_btns = <?php echo json_encode($yellow_btns); ?>;
+        var $purple_btns = <?php echo json_encode($purple_btns); ?>;
+        setTimeout(function() {
+            //alert("Page ready!");
+            //document.getElementById(1).style.background = '#EE82EE';
+            $red_btns.forEach(color_it_red);
+            $green_btns.forEach(color_it_green);
+            $yellow_btns.forEach(color_it_yellow);
+            $purple_btns.forEach(color_it_purple);
+
+            function color_it_red(item) {
+                document.getElementById(item - 1).style.background = '#FF0000';
+            }
+
+            function color_it_green(item) {
+                document.getElementById(item - 1).style.background = '#00FF00';
+            }
+
+            function color_it_yellow(item) {
+                document.getElementById(item - 1).style.background = '#FFFF00';
+            }
+
+            function color_it_purple(item) {
+                document.getElementById(item - 1).style.background = '#EE82EE';
+            }
+
+
+        }, 300);
+    }
+
+</script>
+
 
 <!--
 <script>
