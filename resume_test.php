@@ -11,6 +11,7 @@
 
 
     include("DB_connect.php");  //for database connection
+
          
     $q_fetch_qids="SELECT * FROM state WHERE S_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
     $q_check=mysqli_query($con,$q_fetch_qids);
