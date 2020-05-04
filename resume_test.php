@@ -89,8 +89,10 @@
         }
     }
 
+
         $query1="SELECT * FROM test WHERE T_Flag='0'";
         $r1=mysqli_query($con,$query1);
+        $t_id="";
         $tname="";
         $tdate="";
         $tmarks="";
@@ -101,6 +103,7 @@
         else
         {
             $r2=mysqli_fetch_assoc($r1);
+            $t_id=$r2['T_ID'];
             $tname=$r2['T_Name'];
             $tdate=$r2['T_Date'];
             $tmarks=$r2['T_Marks'];
@@ -109,9 +112,69 @@
         }
 //***********************************************************************************
 
-//    $fetch_btn_colors="SELECT * FROM"
+//********************************************************************************
+    //fetching marked answers of questions in $qu array  and storing in local storage to retain the marked radio options
 
-//***********************************************************************************
+    $fetched_answers=array();
+    $ans_counter=0;
+//    $passage_ans_id=array();
+//$y=0;   //counter to keep track of subquestions
+    foreach($qu as $id)
+    {
+//        $sql_fetch_answers="SELECT * FROM result r join passage_result p
+//        ON r.R_Enrollment_No=p.PR_Enrollment_No and r.R_T_ID=p.PR_T_ID
+//        WHERE r.R_Enrollment_No='".$_SESSION['U_Enrollment_No']."'and r.R_Q_ID='".$id."' and r.R_T_ID='".$t_id."'";
+//        
+        
+//        
+        $sql_fetch_answers="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and R_Q_ID='".$id."' and R_T_ID='".$t_id."'";
+//        
+//        $sql_fetch_pid="SELECT * FROM questions WHERE Q_Flag='0' and Q_ID='".$id."'";
+//        
+//        $sql_fetch_answers2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."'";
+        
+//        $sql_fetch_answers2="SELECT * FROM passage_result pr join questions q join passage_questions pq
+//        ON pq.PQ_AssociatedPassage_ID=q.Q_Passage_ID
+      // ON pr.PR_ID=pq.PQ_ID
+      //      WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."'";
+//        
+//        
+        
+        $sql_check=mysqli_query($con,$sql_fetch_answers);
+        if($sql_check)
+        {
+            $sql_check_row=mysqli_fetch_assoc($sql_check);
+            $fetched_answers[$ans_counter]=$sql_check_row['R_Marked_Answer'];
+            $ans_counter++;
+        }
+        else
+        {
+            //echo '<script>alert("answers fetching failed!");</script>';
+//            $sql_check2=mysqli_query($con,$sql_fetch_answers2);
+//            if($sql_check2)
+//            {
+//                //fetch marked answers of all subquestions
+//                while($sql_keep_fetch=mysqli_fetch_assoc($sql_check2))
+//                {
+//                    $passage_ans_array[$y]=$sql_keep_fetch['PR_Marked_Answer'];
+//                    $y++;
+//                }
+//            }
+//            else
+//            {
+//                //echo "Failed to fetch the answers of passage type subquestions";
+////                $passage_ans_array[$y]="hello";
+////    $y++;
+//            }
+//            $passage_ans_id[$y]=$id;
+ // $y++;
+            $ans_counter++;
+        }
+    }
+    
+
+//echo '<script>alert('.$passage_ans_id[0].');</script>';
+//********************************************************************************
 
 ?>
 
@@ -457,7 +520,16 @@
         }
 
     </script>
+    <script>
+        //script to put fetched answers(from db) in local storage to retain marked radio options
+        var fetched_answers = <?php echo json_encode($fetched_answers); ?>;
+        fetched_answers.forEach(store_it_in_local, index);
 
+        function store_it_in_local(item) {
+            window.localStorage["myAnswers" + index] = item;
+        }
+
+    </script>
 </head>
 
 <body>
