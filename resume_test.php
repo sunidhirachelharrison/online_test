@@ -117,29 +117,16 @@
 
     $fetched_answers=array();
     $ans_counter=0;
-//    $passage_ans_id=array();
-//$y=0;   //counter to keep track of subquestions
+    $passage_ans_id=array();
+    $y=0;   //counter to keep track of subquestions
+    $passage_ans=array();
+    $y2=0;    
     foreach($qu as $id)
     {
-//        $sql_fetch_answers="SELECT * FROM result r join passage_result p
-//        ON r.R_Enrollment_No=p.PR_Enrollment_No and r.R_T_ID=p.PR_T_ID
-//        WHERE r.R_Enrollment_No='".$_SESSION['U_Enrollment_No']."'and r.R_Q_ID='".$id."' and r.R_T_ID='".$t_id."'";
-//        
-        
-//        
+
+        //----------------- fetching from result table --------------------------------
         $sql_fetch_answers="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and R_Q_ID='".$id."' and R_T_ID='".$t_id."'";
-//        
-//        $sql_fetch_pid="SELECT * FROM questions WHERE Q_Flag='0' and Q_ID='".$id."'";
-//        
-//        $sql_fetch_answers2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."'";
-        
-//        $sql_fetch_answers2="SELECT * FROM passage_result pr join questions q join passage_questions pq
-//        ON pq.PQ_AssociatedPassage_ID=q.Q_Passage_ID
-      // ON pr.PR_ID=pq.PQ_ID
-      //      WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."'";
-//        
-//        
-        
+
         $sql_check=mysqli_query($con,$sql_fetch_answers);
         if($sql_check)
         {
@@ -150,30 +137,59 @@
         else
         {
             //echo '<script>alert("answers fetching failed!");</script>';
-//            $sql_check2=mysqli_query($con,$sql_fetch_answers2);
-//            if($sql_check2)
-//            {
-//                //fetch marked answers of all subquestions
-//                while($sql_keep_fetch=mysqli_fetch_assoc($sql_check2))
-//                {
-//                    $passage_ans_array[$y]=$sql_keep_fetch['PR_Marked_Answer'];
-//                    $y++;
-//                }
-//            }
-//            else
-//            {
-//                //echo "Failed to fetch the answers of passage type subquestions";
-////                $passage_ans_array[$y]="hello";
-////    $y++;
-//            }
-//            $passage_ans_id[$y]=$id;
- // $y++;
             $ans_counter++;
         }
+        
+       //------------------- fetching from passage_result table ---------------------- 
+        $sql_fetch_passage_id="SELECT * FROM questions WHERE Q_ID='".$id."' and Q_Flag='0'";
+        $sql_pid_flag=mysqli_query($con,$sql_fetch_passage_id);
+        if($sql_pid_flag)
+        {
+            $sql_pid_row=mysqli_fetch_assoc($sql_pid_flag);
+            $p_id=$sql_pid_row['Q_Passage_ID'];
+            if($p_id)
+            {
+                $sql_fetch_pass_qn_id="SELECT * FROM passage_questions WHERE PQ_AssociatedPassage_ID='".$p_id."'";
+            
+                $sql_pqid_flag2=mysqli_query($con,$sql_fetch_pass_qn_id);
+                if($sql_pqid_flag2)
+                {
+                    while($sql_pqid_row2=mysqli_fetch_assoc($sql_pqid_flag2))
+                    {
+                        $passage_ans_id[$y]=$sql_pqid_row2['PQ_ID'];
+                        $y++;
+                    }
+                }
+            }
+            else
+            {
+                continue;
+            }
+            
+            
+        }
+        
+        //now fetching marked answers of passage sub-questions from passage_result table and storing these answers in $passage_answers array to be later on stored in local storage for state management
+        foreach($passage_ans_id as $paid)
+        {
+            $sql_fetch_passage_answers="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."' and PR_PQ_ID='".$paid."'";
+            $pans_flag=mysqli_query($con,$sql_fetch_passage_answers);
+            if($pans_flag)
+            {
+                while($pans_row=mysqli_fetch_assoc($pans_flag))
+                {
+                    $passage_ans[$y2]=$pans_row['PR_Marked_Answer'];
+                    $y2++;
+                }
+            }
+        }
+        
+        
+        
     }
     
 
-//echo '<script>alert('.$passage_ans_id[0].');</script>';
+echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');</script>';
 //********************************************************************************
 
 ?>
@@ -512,6 +528,28 @@
                         }
                     }
                 }
+                //***code to mark the passage radios stored in local storage array myP
+                else if (localStorage.getItem('myP' + j) != null) {
+
+                    console.log("step14");
+                    var radios = document.getElementsByTagName('input');
+                    for (var i = 0, length = radios.length; i < length; i++) {
+                        console.log("step15");
+                        var l = localStorage.getItem('myP' + j);
+                        console.log("step16");
+                        var p = radios[i].value;
+                        console.log("step17");
+                        if (p == l) {
+                            console.log("step18");
+                            radios[i].checked = true;
+                            //alert(radios[i]);
+                            console.log("step19");
+                            //break;
+                        }
+                    }
+
+                }
+                //*****
             }
 
             //}
@@ -522,12 +560,38 @@
     </script>
     <script>
         //script to put fetched answers(from db) in local storage to retain marked radio options
-        var fetched_answers = <?php echo json_encode($fetched_answers); ?>;
-        fetched_answers.forEach(store_it_in_local, index);
 
-        function store_it_in_local(item) {
+
+        var fetched_answers = <?php echo json_encode($fetched_answers); ?>;
+        var fetched_passage_answers = <?php echo json_encode($passage_ans); ?>;
+
+        fetched_answers.forEach(store_it_in_local);
+
+        function store_it_in_local(item, index) {
+
             window.localStorage["myAnswers" + index] = item;
         }
+
+
+        fetched_passage_answers.forEach(store_it_in_local2);
+
+        function store_it_in_local2(item, index) {
+            window.localStorage["myP" + index] = item;
+
+        }
+
+
+        //            var temp = index;
+        //            if (item == "") {
+        //                fetched_passage_answers.forEach(store_it_in_local2, index, temp);
+        //
+        //                //                    window.localStorage["myAnswers" + index + contr] = item;
+        //            }
+
+
+        //        
+        //        fetched_passage_answers.forEach(store_it_in_local2, index);
+        //
 
     </script>
 </head>
