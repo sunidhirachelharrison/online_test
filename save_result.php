@@ -5,6 +5,7 @@
     {
         $marked_answer = $_POST['radio1'];
         $qid = $_POST['qid'];
+        $c_id = $_POST['c_id'];
         $enrno = $_POST['reid'];
     
         //select the current test details
@@ -27,16 +28,16 @@
         }
         
         
-        $q1="SELECT * FROM result WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."'";
+        $q1="SELECT * FROM result WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."'";
         $row=mysqli_query($con,$q1);
         $c=mysqli_num_rows($row);
         if($c>0)
         {
-            $q="UPDATE result SET R_Marked_Answer='".$marked_answer."' WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."'";
+            $q="UPDATE result SET R_Marked_Answer='".$marked_answer."' WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."'";
         }
         else
         {
-            $q="INSERT into result(R_ID,R_Enrollment_No,R_Q_ID,R_Marked_Answer,R_Score_Quantitative,R_T_ID,R_Shift) VALUES (null,'".$enrno."','".$qid."','".$marked_answer."',0,'".$row1['T_ID']."','".$shift."')";
+            $q="INSERT into result(R_ID,R_Enrollment_No,R_Q_ID,R_Marked_Answer,R_Score_Quantitative,R_T_ID,R_Shift,R_C_ID) VALUES (null,'".$enrno."','".$qid."','".$marked_answer."',0,'".$row1['T_ID']."','".$shift."','".$c_id."')";
         }
         
         //$marked_answer=$_POST['marked_answer'];

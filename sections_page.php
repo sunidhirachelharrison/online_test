@@ -38,6 +38,16 @@
             margin-top: 80px;
         }
 
+        .aa {
+            background: #ea5e0d;
+            color: white;
+        }
+
+        .aa:hover {
+            background: #e9ecef;
+            color: #ea5e0d;
+        }
+
     </style>
 
 </head>
@@ -49,7 +59,7 @@
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a>
+        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
     </nav>
 
     <nav class="navbar navbar-default title1">
@@ -74,8 +84,25 @@
                     <tr><td><center><b>S.No.</b></center></td><td><center><b>Section</b></center></td><td><center><b>Total questions</b></center></td><td><center><b>Time</center></b></td><td><center><b>Action</b></center></td></tr>';
                     $c=1;
 
-				echo '<tr><td><center>'.$c++.'</center></td><td><center>'."Quantitative Aptitude".'</center></td><td><center>'."35".'</center></td><td><center>'."30 minutes".'</center></td><td><center><b><a href="t1.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start New Test</b></span></a></b>&nbsp;<b><a href="resume_test.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Resume Test</b></span></a></b></center></td></tr>';
+				echo '<tr>
+				    <td>
+				        <center>'.$c++.'</center>
+				    </td>
+				    <td>
+				        <center>'."Online Assessment".'</center>
+				    </td>
+				    <td>
+				        <center>'."35".'</center>
+				    </td>
+				    <td>
+				        <center>'."30 minutes".'</center>
+				    </td>
+				    <td>
+				        <center><b><a href="t1.php" onclick="popitup(this.href);window.open("", " _self", "" ).close();return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start New Test</b></span></a></b>&nbsp;<b><a href="resume_test.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Resume Test</b></span></a></b></center>
+				    </td>
+				</tr>';
    ?>
+
                 <script>
                     var a;
                     //function to open test in a new window without menubar
@@ -95,12 +122,13 @@
                         //echo '<tr><td><center>'.$c++.'</center></td><td><center>'."Verbal Aptitude".'</center></td><td><center>'."15".'</center></td><td><center>'."10 minutes".'</center></td><td><center><b><a href="account2.php" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;pointer-events:none"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start</b></span></a></b></center></td></tr>';                    
     
                     echo '</table></div></div>';
-                
                 ?>
 
 
             </div>
+
         </div>
+
     </div>
 
 </body>

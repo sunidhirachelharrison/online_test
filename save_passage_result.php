@@ -5,18 +5,19 @@
     {
         $marked_answer = $_POST['radio1'];
         $qid = $_POST['qid'];
+        $c_id = $_POST['c_id'];
         $enrno = $_POST['reid'];
     
-        $q1="SELECT * FROM passage_result WHERE PR_PQ_ID='".$qid."' AND PR_Enrollment_No='".$enrno."'";
+        $q1="SELECT * FROM passage_result WHERE PR_PQ_ID='".$qid."' AND PR_Enrollment_No='".$enrno."' AND PR_C_ID='".$c_id."'";
         $row=mysqli_query($con,$q1);
         $c=mysqli_num_rows($row);
         if($c>0)
         {
-            $q="UPDATE passage_result SET PR_Marked_Answer='".$marked_answer."' WHERE PR_PQ_ID='".$qid."' AND PR_Enrollment_No='".$enrno."'";
+            $q="UPDATE passage_result SET PR_Marked_Answer='".$marked_answer."' WHERE PR_PQ_ID='".$qid."' AND PR_Enrollment_No='".$enrno."' AND PR_C_ID='".$c_id."'";
         }
         else
         {
-            $q="INSERT into passage_result(PR_ID,PR_Enrollment_No,PR_PQ_ID,PR_Marked_Answer,PR_Score,PR_T_ID) VALUES (null,'".$enrno."','".$qid."','".$marked_answer."',0,1)";
+            $q="INSERT into passage_result(PR_ID,PR_Enrollment_No,PR_PQ_ID,PR_Marked_Answer,PR_Score,PR_T_ID,PR_C_ID) VALUES (null,'".$enrno."','".$qid."','".$marked_answer."',0,1,'".$c_id."')";
         }
         
         //$marked_answer=$_POST['marked_answer'];

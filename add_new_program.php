@@ -1,25 +1,31 @@
 <?php
-	include('DB_Connect.php');
-?>
-<?php
+	
+    //Starting a new session
+    session_start();
+
+    //including file for database connection
+    include("DB_connect.php");
+
+
 	if(isset($_REQUEST['p_submit']))
 	{
 		if($_REQUEST['p_name'] == "")
 		{
-			echo "Enter Progarm name..";
+			echo '<script>alert("Program name can not be blank!");</script>';
 		}
 		else
 		{
-			$program_name = $_REQUEST['p_name'];
+			$program_name = mysqli_real_escape_string($con,$_REQUEST['p_name']);
 			
 			$sql = "INSERT INTO `program` (`Prog_Name`) VALUES ('$program_name')";
-			if(mysqli_query($con,$sql))
+            $r=mysqli_query($con,$sql);
+			if($r)
 			{
-				echo '<script>("New Program Inserted Successfully!");</script>';
+				echo '<script>alert("New Program added Successfully!");</script>';
 			}
 			else
 			{
-                echo '<script>("Unable to insert Program!");</script>';
+                echo '<script>alert("Unable to add new Program!");</script>';
 			}
 		}
 	}
@@ -57,6 +63,7 @@
     <nav class="navbar navbar-expand-sm bg-dark1 navbar-dark">
         <a class="navbar-brand" href="index.php">Admin Panel</a>
 
+        <!--
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -64,125 +71,58 @@
                 </li>
             </ul>
         </div>
+-->
     </nav>
 
-    <div class="wrapper">
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h2>Dashboard</h2>
-            </div>
 
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="Update_profile_form.php">Edit Details</a>
-                </li>
-                <li>
-                    <a href="#">Update Instructions</a>
-                </li>
-                <li>
-                    <a href="#">Update Questions</a>
-                </li>
-                <li>
-                    <a href="add_passage_type_questions.php">Add Passage Type Questions</a>
-                </li>
-                <li>
-                    <a href="add_subquestions.php">Add Sub Questions to a Passage</a>
-                </li>
-                <li>
-                    <a href="view_attendance.php">Attendance</a>
-                </li>
-                <li>
-                    <a href="#">View Result</a>
-                </li>
-                <!--
-			<li>
-   				<a href="#">Change Result</a>
-   		   </li>
--->
-                <li>
-                    <a href="#">Change Profile Image</a>
-                </li>
-                <li>
-                    <a href="searching.php">Searching</a>
-                </li>
-                <li>
-                    <a href="#">Import Instructions</a>
-                </li>
-                <li>
-                    <a href="upload_questions.php">Import Questions</a>
-                </li>
-                <li>
-                    <a href="#">Import Student Details</a>
-                </li>
-                <li>
-                    <a href="change_password.php">Change Password</a>
-                </li>
-                <li class="active">
-                    <a href=".php">Add New Program</a>
-                </li>
-                <li>
-                    <a href=".php" class="active">Add Test Details</a>
-                </li>
-                <li>
-                    <a href=".php">Update Test Details</a>
-                </li>
-                <li>
-                    <a href="select_test.php">Select Test/Exam</a>
-                </li>
-                <li>
-                    <a href=".php">Select Questions for a Test</a>
-                </li>
-            </ul>
 
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <i class="fa fa-align-justify"></i>
+                <!--<span>Check</span>-->
+            </button>
+            <h4>&nbsp;&nbsp;Add New Program</h4>
         </nav>
+        <!-- Page Coding Start -->
+        <div class="" id="formModal">
+            <div class="modal-dialog modal-lg">
+                <form method="post" id="exam_form" action="#">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal_title"></h4>
 
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        </div>
 
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                    <i class="fa fa-align-justify"></i>
-                    <!--<span>Check</span>-->
-                </button>
-                <h4>&nbsp;&nbsp;Add New Program</h4>
-            </nav>
-            <!-- Page Coding Start -->
-            <div class="" id="formModal">
-                <div class="modal-dialog modal-lg">
-                    <form method="post" id="exam_form">
-                        <div class="modal-content">
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="modal_title"></h4>
-
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-md-4 text-right">Program Name<span class="text-danger">*</span></label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="p_name" class="form-control" />
-                                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-4 text-right">Program Name<span class="text-danger">*</span></label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="p_name" id="p_name" class="form-control" onfocusout="return validate_progname(this.value)" required />
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <input type="submit" name="p_submit" class="btn btn-success" value="Add" />
-                            </div>
                         </div>
-                    </form>
-                </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <input type="submit" name="p_submit" class="btn btn-success" value="Add" />
+                        </div>
+                    </div>
+                </form>
             </div>
-
-
-
-
         </div>
 
+
+
+
     </div>
+
+    <!--    </div>-->
 
 
     <!-- Optional JavaScript -->
@@ -199,7 +139,39 @@
         });
 
     </script>
+    <script>
+        var validating = false;
 
+        function validate_progname(inputval) {
+            //            var inputval = trim(inputval);
+            if (inputval == null || inputval == "" || inputval == " ") {
+                if (validating == false) {
+                    validating = true;
+                }
+                alert("Program name can't be blank!");
+                setTimeout(function() {
+                    document.getElementById("p_name").focus();
+                    validating = false;
+                }, 1);
+                return false;
+
+            }
+            for (var i = 0, len = inputval.length; i < len - 1; ++i) {
+                if ((inputval.charAt(i) === ' ') && (inputval.charAt(i + 1) === ' ')) {
+                    if (validating == false) {
+                        validating = true;
+                    }
+                    alert('Program name cannot have adjacent spaces!');
+                    setTimeout(function() {
+                        document.getElementById("p_name").focus();
+                        validating = false;
+                    }, 1);
+                    return false;
+                }
+            }
+        }
+
+    </script>
 </body>
 
 </html>

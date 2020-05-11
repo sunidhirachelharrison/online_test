@@ -28,21 +28,25 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Upload Questions</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>Import Student Registration Details</title>
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
-        }
-
     </style>
 </head>
 
@@ -52,11 +56,40 @@
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Training, Learning & Development</a></nav>
+        <a class="navbar-brand" href="#">Import Student Registration Details</a>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="align-middle">Import:</span> 
+                        <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                            <div class="p-3">
+                                <label>Choose Excel File:</label>
+                                <input type="file" name="file" accept=".xls,.xlsx">
+                                <button type="submit" id="submit" name="import" class="btn bg-orange text-white">Upload</button>
+                            </div>
+                            </form>     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<!-- 
     <div class="container mt-2 mb-5">
 
         <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <h1>Upload Student Registration Details</h1>
+            <h1>Import Student Registration Details</h1>
             <div style="background:#e9ecef" class="p-4 ">
                 <label>Choose Excel File:</label>
                 <input type="file" name="file" accept=".xls,.xlsx">
@@ -65,7 +98,7 @@
 
         </form>
 
-    </div>
+    </div> -->
 
     <div class="container mt-2 mb-5">
 
@@ -274,6 +307,13 @@
 
             </table>
         </div>
+    
+                <footer class="mt-1">
+                    <div class="text-center">
+                        <p>Copyright &copy; Teerthanker Mahaveer University</p>
+                    </div>
+                </footer>
+    
     </div>
 
 

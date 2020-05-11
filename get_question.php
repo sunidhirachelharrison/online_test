@@ -159,11 +159,14 @@
                     if($cou==1) //display passage once only
                     {
                         echo "<b>" .$counter . ") " . $rw['P_Description'] ."<br/>";
-                        echo "<ul><li>" . $rw['P_SubpointA'] . "</li>";
-                        echo "<li>" . $rw['P_SubpointB'] . "</li>";
-                        echo "<li>" . $rw['P_SubpointC'] . "</li>";
-                        echo "<li>" . $rw['P_SubpointD'] . "</li>";
-                        echo "<li>" . $rw['P_SubpointE'] . "</li></b><br/>";
+                        echo "<ul>";
+                        if($rw['P_SubpointA']!=""){echo "<li>" . $rw['P_SubpointA'] . "</li>";}
+                        if($rw['P_SubpointB']!=""){echo "<li>" . $rw['P_SubpointB'] . "</li>";}
+                        if($rw['P_SubpointC']!=""){echo "<li>" . $rw['P_SubpointC'] . "</li>";}
+                        if($rw['P_SubpointD']!=""){echo "<li>" . $rw['P_SubpointD'] . "</li>";}
+                        if($rw['P_SubpointE']!=""){echo "<li>" . $rw['P_SubpointE'] . "</li>";}
+                        echo "</ul></b>";
+                       
                         
                         if($rw['P_Image']!=null)
                         {

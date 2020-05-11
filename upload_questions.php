@@ -27,44 +27,59 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Upload Questions</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>Import Questions</title>
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
-        }
-
     </style>
 </head>
 
 <body>
-
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a></nav>
-    <div class="container mt-2 mb-3">
+        <a class="navbar-brand" href="#">Admin Panel - Import Questions</a>
+    </nav>
 
-        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <h1>Upload Questions</h1>
-            <div style="background:#e9ecef" class="p-4 ">
-                <label>Choose Excel File:</label>
-                <input type="file" name="file" accept=".xls,.xlsx">
-                <button type="submit" id="submit" name="import" class="btn aa">Upload</button>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="align-middle">Import:</span> 
+                        <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                    </div>
+                    <div class="card-body">
+                            <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                            <div class="p-3">
+                                <label>Choose Excel File:</label>
+                                <input type="file" name="file" accept=".xls,.xlsx">
+                                <button type="submit" id="submit" name="import" class="btn bg-orange text-white">Upload</button>
+                            </div>
+                            </form>     
+                    </div>
+                </div>
             </div>
-
-        </form>
-
+        </div>
     </div>
+
 
     <div class="container mt-2 mb-5">
 
@@ -239,7 +254,25 @@ if (isset($_POST['import']))
                     $type = mysqli_real_escape_string($con,$Row[17]);
                     //echo $sno;
                 }
-
+                
+                $ccode="";
+                if(isset($Row[18])) {
+                    $ccode = mysqli_real_escape_string($con,$Row[18]);
+                    //echo $sno;
+                }
+                
+                
+                $cname="";
+                if(isset($Row[19])) {
+                    $cname = mysqli_real_escape_string($con,$Row[19]);
+                    //echo $sno;
+                }
+                
+                $pname="";
+                if(isset($Row[20])) {
+                    $pname = mysqli_real_escape_string($con,$Row[20]);
+                    //echo $sno;
+                }
 
                
             ?>
@@ -267,9 +300,35 @@ if (isset($_POST['import']))
 
 
                 <?php
+//**********  fetching the program id and course id for each question  ****************
+                
+        $sql_fetch_pid="SELECT * FROM program WHERE Prog_Name='".$pname."'";
+        $pid="";
+        $r1=mysqli_query($con,$sql_fetch_pid);
+        if($r1)
+        {
+            $f1=mysqli_fetch_assoc($r1);
+            $pid=$f1['Prog_ID'];
+//            echo $pid;
+        }
 
+        
+                
+        $sql_fetch_cid="SELECT * FROM course WHERE C_Code='".$ccode."' and C_Prog_ID='".$pid."'";
+        $cid="";
+        $r2=mysqli_query($con,$sql_fetch_cid);
+        if($r2)
+        {
+            $f2=mysqli_fetch_assoc($r2);
+            $cid=$f2['C_ID'];
+        }
+                
+                
+//******************************************************************
+                
+//                echo '<script>alert('.$pname." ".$cname.');</script>';
         if(!(empty($qid))) {
-            $query = "insert into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag) values(null,'".$qdescription."','".$qimage."','".$optionA."', '".$imageA."','".$optionB."','".$imageB."','".$optionC."','".$imageC."','".$optionD."','".$imageD."','".$optionE."','".$imageE."','".$answer."','".$image."','".$allotedmarks."','".$level."','".$type."','".$_SESSION['U_ID']."',null,'0')";
+            $query = "insert into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag,Q_Prog_ID,Q_C_ID) values(null,'".$qdescription."','".$qimage."','".$optionA."', '".$imageA."','".$optionB."','".$imageB."','".$optionC."','".$imageC."','".$optionD."','".$imageD."','".$optionE."','".$imageE."','".$answer."','".$image."','".$allotedmarks."','".$level."','".$type."','".$_SESSION['U_ID']."',null,'0','".$pid."','".$cid."')";
             $result = mysqli_query($con, $query);
 
             if (! empty($result)) {
@@ -307,9 +366,15 @@ if (isset($_POST['import']))
             </table>
 
         </div>
-
+        
+                <footer class="mt-1">
+                    <div class="text-center">
+                        <p>Copyright &copy; Teerthanker Mahaveer University</p>
+                    </div>
+                </footer>
 
     </div>
+
 
 </body>
 

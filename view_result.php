@@ -6,9 +6,11 @@
     
     $query="SELECT * FROM test";
     $query2="SELECT * FROM program";
+    $query3="SELECT * FROM course";
     //$conn->exec($query);
     $stmt = $conn->query($query);
     $stmt2=  $conn->query($query2);
+    $stmt3=$conn->query($query3);
     //$stmt = $conn->prepare("SELECT * FROM test");
     //$stmt->execute();
     //$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -26,10 +28,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="shortcut icon" href="images/tmu.png">
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>View Attendance</title>
+
+    <!-- Bootstrap CSS -->  
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <title>view exam - CTLD</title>
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -92,6 +100,12 @@
 
     </script>
 
+<style>
+        .bg-orange{
+            background: #ea5e0d;
+        }
+</style>
+
 </head>
 
 <body>
@@ -101,7 +115,7 @@
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Vew Result</a>
+        <a class="navbar-brand" href="index.php">Admin Panel - Vew Result</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -112,7 +126,10 @@
             <div class="col-1"></div>
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">Select:</div>
+                    <div class="card-header">
+                        <span class="align-middle">Select:</span>
+                        <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                    </div>
                     <div class="card-body">
                         <div id="">
 
@@ -133,7 +150,7 @@
                                         <?php  } ?>
                                     </select><br />
 
-                                    Program:
+                                    <br>Program:
                                     <select name="program" id="program">
                                         <option value="None">None</option>
                                         <?php
@@ -147,9 +164,28 @@
 
                                         <?php  } ?>
                                     </select><br />
+                                    <!--//******************************************************************-->
+
+                                    <br>Course:
+                                    <select name="course" id="course">
+                                        <option value="None">None</option>
+                                        <?php
+                $name="";
+                $course_id="";
+                while($resu3=$stmt3->fetch())
+                {
+                    //$pname=$result2['Prog_Name'];
+                    
+                ?>
+                                        <option value="<?php echo $resu3['C_ID']; ?>"><?php echo $resu3['C_Name']; ?></option>
+
+                                        <?php  } ?>
+                                    </select><br />
 
 
-                                    Year:
+
+                                    <!--***************************************************************-->
+                                    <br>Year:
                                     <select name="year" id="year">
                                         <option value="None">None</option>
                                         <option value="I">I</option>
@@ -159,7 +195,7 @@
                                         <option value="V">V</option>
                                     </select><br />
 
-                                    Section:
+                                    <br>Section:
                                     <select name="section" id="section">
                                         <option value="None">None</option>
                                         <option value="A">A</option>
@@ -169,29 +205,39 @@
                                         <option value="E">E</option>
                                         <option value="F">F</option>
                                     </select><br />
+<br>
 
 
-
-                                    <input type="submit" name="show" value="SHOW RESULT" class="btn btn-danger" id="show">
+                                    <input type="submit" name="show" value="SHOW RESULT" class="btn bg-orange text-white" id="show">
                                 </form>
                             </div>
 
                             <?php  
                     $sno=1;
+                            $course_id="";
                     if(isset($_POST['show']))
                     {
                         $test_id=$_POST['test_ids'];
                         $prog_id=$_POST['program'];
+                        $course_id=$_POST['course'];
                         $year=$_POST['year'];
                         $section=$_POST['section'];
 //                        $session=$_POST['session'];
 //                        $sem=$_POST['sem'];
                         
                           //  echo $test_id . " " . $prog_id . " " . $year . " " . $section;
-                    $qry="SELECT distinct(R_Enrollment_No) FROM result join user
+                    /*$qry="SELECT distinct(R_Enrollment_No) FROM result join user
                     ON user.U_Enrollment_No=result.R_Enrollment_No 
                     WHERE R_T_ID='".$test_id."'
                     ORDER BY U_Program,U_Branch, U_Year,U_Section,U_Enrollment_No";
+                    */
+                    $qry="SELECT distinct(R_Enrollment_No) FROM result join user
+                    ON user.U_Enrollment_No=result.R_Enrollment_No 
+                    WHERE R_T_ID='".$test_id."' 
+                    ORDER BY U_Program,U_Branch, U_Year,U_Section,U_Enrollment_No";
+                    
+                        
+                        
                     $stmt = $conn->query($qry);
                     $i=0;
                     //$marks=0;
@@ -256,11 +302,19 @@
                             $obj=new DateTime($re3['T_Date']);
                             $d=date_format($obj,"d F Y");
                         
+                        
+                            $q4="SELECT * FROM course WHERE C_ID='".$course_id."'";
+                            $r4=mysqli_query($con,$q4);
+                            $re4=mysqli_fetch_assoc($r4);
+                            $c_name=$re4['C_Name'];
+                            $c_code=$re4['C_Code'];
+                        
+                        
                             ?>
 
                             <div class="table-responsive mt-3" id="div_to_print">
                                 <h5>
-                                    <center>Result <?php if($test_id!="None"){echo " of " . $name . "<br/> Date:  " . $d; } ?></center>
+                                    <center>Result <?php if($test_id!="None"){echo " of " . $name . "<br/>Course Name:&nbsp;".$c_name."&nbsp;&nbsp;<br/>Course Code: ( ".$c_code." )<br/> Date:  " . $d; } ?></center>
                                 </h5>
                                 <table border="1" class="table table-bordered table-hover" id="result_table">
 
@@ -278,6 +332,7 @@
                                         <th>Section</th>
                                         <th>Marks Obtained</th>
                                         <th>Total Marks</th>
+
                                         <th id='10'>CHECK RESPONSE</th>
                                         <!--
                                         <th>Test Name</th>
@@ -285,6 +340,7 @@
                                         <th>Test Time</th>
                                         <th>Test Shift</th>
 -->
+
                                     </tr>
                                     <?php 
                     
@@ -298,58 +354,83 @@
                                 WHERE r.R_Enrollment_No='".$rno."' 
                                 GROUP BY r.R_Enrollment_No";       
                             }
+                            else if($course_id=='None')
+                           {
+                               $q1="SELECT * FROM user u join result r 
+                                ON u.U_Enrollment_No=r.R_Enrollment_No
+                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."'
+                                GROUP BY r.R_Enrollment_No";
+
+                           }
                            else if($year=='None')
                            {
                                 $q1="SELECT * FROM user u join result r 
                                 ON u.U_Enrollment_No=r.R_Enrollment_No
-                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."' 
+                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."'  AND r.R_C_ID='".$course_id."'
                                 GROUP BY r.R_Enrollment_No";   
                            }
+                           
                            else if($section=='None')
                             {
                                 $q1="SELECT * FROM user u join result r 
                                 ON u.U_Enrollment_No=r.R_Enrollment_No
-                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."'  AND u.U_Year='".$year."'
+                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."' AND r.R_C_ID='".$course_id."'  AND u.U_Year='".$year."'
                                 GROUP BY r.R_Enrollment_No";   
                             }
                             else
                             {
                                 $q1="SELECT * FROM user u join result r 
                                 ON u.U_Enrollment_No=r.R_Enrollment_No
-                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."'  AND u.U_Year='".$year."' AND u.U_Section='".$section."' 
+                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."' AND r.R_C_ID='".$course_id."'  AND u.U_Year='".$year."' AND u.U_Section='".$section."' 
                                 GROUP BY r.R_Enrollment_No ";   
                             }
                             
                             //fetch total marks of each student
-                            $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', SUM(pr.PR_Score) as 'total2' , COUNT(*) as 'num' 
-                            FROM result r join passage_result pr 
-                            WHERE r.R_T_ID='".$test_id."' AND pr.PR_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' AND pr.PR_Enrollment_No='".$rno."'";        
-                            
+                           /* $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', SUM(pr.PR_Score) as 'total2' , COUNT(*) as 'num' 
+                            FROM result r join passage_result pr
+                            ON pr.R_T_ID=r.PR_T_ID and pr.R_C_ID=r.PR_C_ID and r.PR_Enrollment_No=pr.R_Enrollment_No
+                            WHERE r.R_T_ID='".$test_id."' AND pr.PR_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' AND pr.PR_Enrollment_No='".$rno."' ";        
+                            */
+                               
+                            $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', COUNT(*) as 'num1',r.R_C_ID as 'rcid' FROM result r WHERE r.R_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' ";    
+                               
+                            $q5="SELECT SUM(pr.PR_Score) as 'total2' , COUNT(*) as 'num2',pr.PR_C_ID 
+                            FROM passage_result pr WHERE  pr.PR_T_ID='".$test_id."' AND pr.PR_Enrollment_No='".$rno."' ";   
                                
                             $marks=0;
                             $total1=0;
                             $total2=0;
+//                            $cid="";
+//                            $pid="";
                             $r2=mysqli_query($con,$q2);
+                            $r5=mysqli_query($con,$q5);
                             if($r2 && $r3)
                             {
                                 $re2=mysqli_fetch_assoc($r2);
-                                
+                                $re5=mysqli_fetch_assoc($r5);
+                                $x1=$re2['num1']; //to eliminate duplicate sum values
+                                $x2=$re5['num2']; //to eliminate duplicate sum values
                                 $total1=$re2['total1'];
+                                $total2=$re5['total2'];
                                 //$total1=$total1 + 0;
-                                $total2=$re2['total2'];
-                                $x=$re2['num']; //to eliminate duplicate sum values
-                                if($x!=0)
-                                {
-                                   $total2=$total2/$x; 
-                                }
-                                else
+//                                echo "@@@@".$total1."##";
+ //  echo "***".$total2."//<br/>";
+//                                $cid=$re2['rcid'];
+                                
+//                                if($x2!=0)
+//                                {
+//                                   //$total2=$total2/$x; 
+//                                    $total2=$total2; 
+//                                }
+//                                else
+                                if($x2==0)
                                 {
                                    $total2=$total2 +0 ; 
                                 }
                                 
                                 $marks= ($total1 + $total2);
                                 
-                               // echo $total1. " " . $total2 . "**";
+//                                echo $total1. "// " . $total2 . "**";
                             }
                                
                             
@@ -368,10 +449,13 @@
                                         <td><?php echo $re1['U_Branch'];  ?></td>
                                         <td><?php echo $re1['U_Year'];  ?></td>
                                         <td><?php echo $re1['U_Section'];  ?></td>
+                                        <!--                                        <td><?php //echo $re1['U_Section'];  ?></td>-->
 
                                         <td><?php echo $marks;  ?></td>
                                         <td><?php echo $m;  ?></td>
-                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name'];;  ?>">CHECK RESPONSE</a></td>
+
+
+                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name']; ?>&progname=<?php echo $re1['U_Program'];  ?>">CHECK RESPONSE</a></td>
 
                                     </tr>
                                     <?php $sno++ ; }}  ?>
@@ -387,11 +471,11 @@
                             </div>
 
                             <div class="float-right p-2">
-                                <a href="#" id="save" class="btn btn-danger" onClick="javascript:fnExcelReport();">SAVE AS EXCEL SHEET</a>
+                                <a href="#" id="save" class="btn bg-orange text-white" onClick="javascript:fnExcelReport();">SAVE AS EXCEL SHEET</a>
                             </div>
 
                             <div class="float-right p-2">
-                                <a href="#" id="print" class="btn btn-danger" onClick="javascript:PrintDiv();">PRINT</a>
+                                <a href="#" id="print" class="btn bg-orange text-white" onClick="javascript:PrintDiv();">PRINT</a>
                             </div>
 
 
@@ -408,7 +492,7 @@
 
     </div>
 
-    <footer class="mt-2">
+    <footer class="mt-5">
         <div class="text-center">
             <p>Copyright &copy; Teerthanker Mahaveer University</p>
         </div>

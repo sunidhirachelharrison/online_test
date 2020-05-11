@@ -1,7 +1,17 @@
 <?php
     //session_start();
     include("DB_connect.php");
-    
+
+//    $sql_fetch_time="SELECT * FROM state WHERE S_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
+ // $fetch_time_flag=mysqli_query($con,$sql_fetch_time);
+ // if($fetch_time_flag)
+ // {
+ // $fetch_time_val=mysqli_fetch_assoc($fetch_time_flag);
+ // $time_string=$fetch_time_val['S_Timer_info'];
+ // echo '<script>
+   //  alert('.$time_string.');
+// </script>';
+ // }
 ?>
 <html>
 

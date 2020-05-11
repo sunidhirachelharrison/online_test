@@ -189,8 +189,33 @@
     }
     
 
-echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');</script>';
+//echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');</script>';
 //********************************************************************************
+
+//***************** fetching course name ********************************************
+
+
+    $query2="SELECT * FROM course WHERE C_Flag='1' and C_Prog_ID='1'";
+        $r2=mysqli_query($con,$query2);
+        $c_id="";
+        $c_name="";
+        $c_code="";
+        
+        if(!($r2))
+        {
+            //failed to fetch the test details to be displayed    
+        }
+        else
+        {
+            $r3=mysqli_fetch_assoc($r2);
+            $c_id=$r3['C_ID'];
+            $c_name=$r3['C_Name'];
+            $c_code=$r3['C_Code'];
+           
+        }
+
+//***********************************************************************************
+
 
 ?>
 
@@ -605,7 +630,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
                 <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
             </div>
             <div class="col-12 col-lg-4 align-self-center"><br>
-                <div class="text-center"><b><?php echo $tname . "<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
+                <div class="text-center"><b><?php echo $tname . "<br/>". $c_name . "("  . $c_code . ")<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
             </div>
             <div class="col-12 col-lg-4 text-center align-self-end"><br>
                 <div class=""><b><?php include("timer1.php"); ?></b></div>
@@ -615,7 +640,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
 
     <!-- navbar -->
     <div class="navbar  navbar-default bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Center for Teaching, Learning & Development</a>
+        <a class="navbar-brand" href="#">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
         <a class="navbar-brand pull-right" href="#"><i><?php echo $_SESSION['U_Name'] ." (" . $_SESSION['U_Enrollment_No'] .")";  ?></i></a>
     </div>
 
@@ -713,7 +738,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
         var radios = document.getElementsByName('options');
         //var x="radio_marked"+window.counter;
         //alert(x);
-
+        var c_id = <?php echo json_encode($c_id); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -746,6 +771,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
             'radio1': radio1,
             'qid': qid,
             'reid': reid,
+            'c_id': c_id,
         };
         //alert(pass_data);
         $.ajax({
@@ -768,6 +794,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
         var radios = document.getElementsByName(m);
         //var x="radio_marked"+window.counter;
         //alert(x);
+        var c_id = <?php echo json_encode($c_id); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -782,6 +809,7 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
             'radio1': radio1,
             'qid': qid,
             'reid': reid,
+            'c_id': c_id,
         };
         //alert(pass_data);
         $.ajax({
@@ -804,7 +832,9 @@ echo '<script>alert('.print_r($passage_ans).'*** '.print_r($fetched_answers).');
 </script>
 
 <script>
-    window.onload = color_btns(); //color the btns on page load using saved state of btns
+    //window.onload = color_btns(); //color the btns on page load using saved state of btns
+    //setTimeout(color_btns(), 1000); //calling color_btns func after 1000 ms so as to load timer on window load
+    color_btns(); //color the btns on page load using saved state of btns
 
     function color_btns() {
 

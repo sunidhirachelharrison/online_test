@@ -17,16 +17,18 @@ session_start();
 
 if(isset($_POST['submit']))
 {
-    $description=$_POST['description'];
-    $subpointA=$_POST['subpointA'];
-    $subpointB=$_POST['subpointB'];
-    $subpointC=$_POST['subpointC'];
-    $subpointD=$_POST['subpointD'];
-    $subpointE=$_POST['subpointE'];
+    $description=mysqli_real_escape_string($con,$_POST['description']);
+    $subpointA=mysqli_real_escape_string($con,$_POST['subpointA']);
+    $subpointB=mysqli_real_escape_string($con,$_POST['subpointB']);
+    $subpointC=mysqli_real_escape_string($con,$_POST['subpointC']);
+    $subpointD=mysqli_real_escape_string($con,$_POST['subpointD']);
+    $subpointE=mysqli_real_escape_string($con,$_POST['subpointE']);
     $image=basename($_FILES['p_image']['name']);
-    $marks=$_POST['marks'];
-    $level=$_POST['level'];
-    $type=$_POST['type'];
+    $marks=mysqli_real_escape_string($con,$_POST['marks']);
+    $level=mysqli_real_escape_string($con,$_POST['level']);
+    $type=mysqli_real_escape_string($con,$_POST['type']);
+    $prog_name=mysqli_real_escape_string($con,$_POST['prog_name']);
+    $course_code=mysqli_real_escape_string($con,$_POST['course_code']);
     
     $target_dir="uploads/";
     $target_file=$target_dir.basename($_FILES['p_image']['name']);
@@ -42,6 +44,21 @@ if(isset($_POST['submit']))
     $r=mysqli_query($con,$sql);
     if($r)
     {
+        //finding program id and course id to be added in question table
+        $fetch_pid="SELECT * FROM program WHERE Prog_Name='".$prog_name."'";
+        $fetch_cid="SELECT * FROM course WHERE C_Code='".$course_code."'";
+        $flag_pid=mysqli_query($con,$fetch_pid);
+        $flag_cid=mysqli_query($con,$fetch_cid);
+        $pid="";
+        $cid="";
+        if($flag_pid && $flag_cid)
+        {
+            $result1=mysqli_fetch_assoc($flag_pid);
+            $result2=mysqli_fetch_assoc($flag_cid);
+            $pid=$result1['Prog_ID'];
+            $cid=$result2['C_ID'];
+        }
+        
         //add passage_id in questions table
         $q="SELECT * FROM passage WHERE P_Description='".$description."'";
         $re=mysqli_query($con,$q);
@@ -54,7 +71,7 @@ if(isset($_POST['submit']))
             $aid=$result['P_A_ID'];
         
         
-        $query="INSERT into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag) VALUES(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,'".$marks."',null,null,'".$aid."','".$id."',null)";
+        $query="INSERT into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag,Q_Prog_ID,Q_C_ID) VALUES(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,'".$marks."',null,null,'".$aid."','".$id."','0','".$pid."','".$cid."')";
         $x=mysqli_query($con,$query);
         if(!($x))
         {
@@ -107,7 +124,7 @@ if(isset($_POST['submit']))
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a></nav>
+        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -146,6 +163,12 @@ if(isset($_POST['submit']))
 
                     <label for="type"><b>Question Category:</b></label>
                     <input type="text" class="form-control" name="type" id="type" /><br />
+
+                    <label for="prog_name"><b>Program Name:</b></label>
+                    <input type="text" class="form-control" name="prog_name" id="prog_name" /><br required />
+
+                    <label for="course_code"><b>Course Code:</b></label>
+                    <input type="text" class="form-control" name="course_code" id="course_code" required /><br />
 
                     <input type="submit" class="btn btn-danger mt-3" name="submit" value="SUBMIT" id="submit" />
 

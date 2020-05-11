@@ -15,8 +15,8 @@
         $current_time = time();     //get time from the server
         $cookie_expiration_time = $current_time + (30 * 24 * 60 * 60);  // for 1 month
         
-        $username=$_POST['enrollment_no'];
-        $password=$_POST['password'];
+        $username=mysqli_real_escape_string($con,$_POST['enrollment_no']);
+        $password=mysqli_real_escape_string($con,$_POST['password']);
         
         //storing enrollment no and password in cookies
         setcookie('enrollment_no',$username,$cookie_expiration_time);
@@ -41,8 +41,8 @@
     if(isset($_POST['login']))
     {
             
-        $username=$_POST['enrollment_no'];
-        $password=$_POST['password'];
+        $username=mysqli_real_escape_string($con,$_POST['enrollment_no']);
+        $password=mysqli_real_escape_string($con,$_POST['password']);
         
         //fetching entered enrollment no from the db
         $query  =   "SELECT * FROM user WHERE U_Enrollment_No='".$username."'";
@@ -62,6 +62,7 @@
                 $_SESSION['U_ID']=$r['U_ID'];     //storing user ID in session
                 
                 $_SESSION['U_Name']=$r['U_Name'];
+                $_SESSION['U_Program']=$r['U_Program'];
 //                $_SESSION['status']="logged_in";
 //                $_SESSION['ucategory']=$r['U_Type'];
 //                $_SESSION['pid']=$r['U_Prog_ID'];
@@ -75,6 +76,7 @@
                 $msg="Valid Credentials! Login Successful!";
                 if($r['U_User_Type']=="admin")
                 {
+                    $_SESSION['User']="admin";  //storing admin to reset password later on(only to be done by admin)
                     $_SESSION['U_User_Type']=$username;     //storing user type in session
                     echo "<script type='text/javascript'> alert('$msg');
                 window.location.href='dashboard.php';
@@ -144,7 +146,7 @@ mysqli_close($con);
      </div>
 
      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-         <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a>
+         <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
              <span class="navbar-toggler-icon"></span>
          </button>
@@ -156,29 +158,29 @@ mysqli_close($con);
              <h1 class="mb-5 font-weight-light text-uppercase">Log in</h1>
 
              <div class="form-group">
-                 <input type="text" class="form-control rounded-pill form-control-lg" placeholder="Enter Enrollment No./Employee ID" name="enrollment_no" value="<?php  if(isset($_COOKIE['enrollment_no']))
+                 <input type="text" class="form-control rounded-pill form-control-lg" placeholder="Enter Enrollment No./Employee ID" id="enrollment_no" name="enrollment_no" value="<?php  if(isset($_COOKIE['enrollment_no']))
                 {
                     //showing enrollment no if cookies are set
                     echo $_COOKIE['enrollment_no'];
     
-                }  ?>" required>
+                }  ?>" onfocusout="return validate_username(this.value)" required>
 
              </div>
 
              <div class="form-group">
-                 <input type="password" class="form-control rounded-pill form-control-lg" placeholder="Enter Password" name="password" value="<?php  if(isset($_COOKIE['password']))
+                 <input type="password" class="form-control rounded-pill form-control-lg" placeholder="Enter Password" name="password" id="password" value="<?php  if(isset($_COOKIE['password']))
                             {
                                 //showing password  if cookies are set
                                 echo $_COOKIE['password'];
     
-                            }  ?>" required>
+                            }  ?>" onfocusout="return validate_pwd(this.value)" required>
              </div>
 
              <div class="forget-link">
                  <div class="form-check">
-                     <input type="checkbox" name="remember" class="form-check-input" id="remember">
+                     <input type="checkbox" name="remember" class="form-check-input class=" float-left"" id="remember">
                      <label for="remember">Remember Me&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                     <a href="Forgot_pwd_form.php">Forget Password?</a>
+                     <a href="reset_password_of_user.php">Forgot Password?</a>
                  </div>
              </div>
 
@@ -204,5 +206,63 @@ mysqli_close($con);
 
 
  </body>
+ <script>
+     var validating = false;
+
+     function validate_username(inputval) {
+         if (inputval == null || inputval == "") {
+             if (validating == false) {
+                 validating = true;
+             }
+             alert("Enrollment No/Employee ID can't be blank");
+             setTimeout(function() {
+                 document.getElementById("enrollment_no").focus();
+                 validating = false;
+             }, 1);
+             return false;
+         }
+         for (var i = 0, len = inputval.length; i < len; ++i) {
+             if (inputval.charAt(i) === ' ') {
+                 if (validating == false) {
+                     validating = true;
+                 }
+                 alert('Enrollment No/Employee ID  cannot have spaces!');
+                 setTimeout(function() {
+                     document.getElementById("enrollment_no").focus();
+                     validating = false;
+                 }, 1);
+                 return false;
+             }
+         }
+     }
+
+     function validate_pwd(inputval) {
+         if (inputval == null || inputval == "") {
+             if (validating == false) {
+                 validating = true;
+             }
+             alert("Invalid password!");
+             setTimeout(function() {
+                 document.getElementById("password").focus();
+                 validating = false;
+             }, 1);
+             return false;
+         }
+         for (var i = 0, len = inputval.length; i < len; ++i) {
+             if (inputval.charAt(i) === ' ') {
+                 if (validating == false) {
+                     validating = true;
+                 }
+                 alert("Invalid password!");
+                 setTimeout(function() {
+                     document.getElementById("password").focus();
+                     validating = false;
+                 }, 1);
+                 return false;
+             }
+         }
+     }
+
+ </script>
 
  </html>

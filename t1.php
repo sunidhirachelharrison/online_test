@@ -13,8 +13,35 @@
     include("DB_connect.php");  //for database connection
           //for timer display on top of the page
       
+
+//select the program id and course id to fetch questions and stor results course and program wise
+
+    $sq="SELECT * FROM program p join course c
+    ON c.C_Prog_ID=p.Prog_ID
+    WHERE p.Prog_Name='".$_SESSION['U_Program']."'";
+    $ro=mysqli_query($con,$sq);
+    $cid="";
+    $cname="";
+    $ccode="";
+    $proid="";
+    if(!($ro))
+    {
+        echo '<script>alert("Error in fetching program and course details!");</script>';
+    }
+    else
+    {
+        $ro_flag=mysqli_fetch_assoc($ro);
+        $cid=$ro_flag['C_ID'];
+        $cname=$ro_flag['C_Name'];
+        $ccode=$ro_flag['C_Code'];
+        $proid=$ro_flag['Prog_ID'];
+//        $_SESSION['U_Prog_ID']=$proid;
+ // $_SESSION['U_C_ID']=$cid;
+    }
+
+
         //select 35 questions from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
-        $sql="SELECT * FROM questions WHERE Q_Flag='0' limit 35";
+        $sql="SELECT * FROM questions WHERE Q_Flag='0' and Q_Prog_ID='".$proid."' and Q_C_ID='".$cid."' limit 120";
         $row=mysqli_query($con,$sql);
         
         if(!($row))
@@ -76,7 +103,30 @@
             $obj=new DateTime($tdate);
             $tdate=date_format($obj,"d F Y");
         }
-                      
+                  
+//***************** fetching course name ********************************************
+
+
+//    $query2="SELECT * FROM course WHERE C_Flag='1' and C_Prog_ID='1'";
+// $r2=mysqli_query($con,$query2);
+// $c_id="";
+//// $c_name="";
+// $c_code="";
+//
+// if(!($r2))
+// {
+// //failed to fetch the test details to be displayed
+// }
+// else
+// {
+// $r3=mysqli_fetch_assoc($r2);
+// $c_id=$r3['C_ID'];
+// $c_name=$r3['C_Name'];
+// $c_code=$r3['C_Code'];
+//
+// }
+
+//***********************************************************************************
 
 ?>
 
@@ -168,6 +218,15 @@
 
         #txtHint {
             padding: 25px;
+        }
+
+        .sd {
+            position: absolute;
+            bottom: 10;
+        }
+
+        .dd {
+            position: relative;
         }
 
     </style>
@@ -460,7 +519,7 @@
 
 </head>
 
-<body>
+<body onselectstart="return false" onkeydown="if ((arguments[0] || window.event).ctrlKey) return false">
 
     <!-- TMU Logo with Header -->
     <div class="jumbotron" style="margin-bottom:0; padding: 1rem 1rem;">
@@ -469,7 +528,7 @@
                 <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
             </div>
             <div class="col-12 col-lg-4 align-self-center"><br>
-                <div class="text-center"><b><?php echo $tname . "<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
+                <div class="text-center"><b><?php echo $tname . "<br/>". $cname . "("  . $ccode . ")<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
             </div>
             <div class="col-12 col-lg-4 text-center align-self-end"><br>
                 <div class=""><b><?php include("timer1.php"); ?></b></div>
@@ -479,25 +538,25 @@
 
     <!-- navbar -->
     <div class="navbar  navbar-default bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Center for Teaching, Learning & Development</a>
+        <a class="navbar-brand" href="#">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
         <a class="navbar-brand pull-right" href="#"><i><?php echo $_SESSION['U_Name'] ." (" . $_SESSION['U_Enrollment_No'] .")";  ?></i></a>
     </div>
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 dd">
 
                 <div class="container bl mt-3">
                     <div class="row">
                         <div class="col-lg-12 col-12">
                             <div id="txtHint"><b>Question and options will be listed here...</b></div>
                         </div>
-                        <div class="col-12 col-lg-12 col-sm-12">
+                        <div class="col-12 col-lg-12 col-sm-12 sd">
                             <form action="thankyou_page.php" method="post" class="button_set">
                                 <input type="button" class="previous c" id="previous" name="previous" value="PREVIOUS" onclick="show_previous()" />
                                 <input type="button" id="marked" class="c" name="marked" value="MARK FOR REVIEW" onclick="mark_for_review();" />
                                 <button name="submit" id="submit" style="visibility:hidden" onclick="done();" class="btn-danger float-right d">SUBMIT</button>
-                                <input type="button" class="next float-right c mr-1" id="next" name="next" value="NEXT" onclick="increment()" />
+                                <input type="button" class="next float-right c mr-1" id="next" name="next" value=" SAVE & NEXT" onclick="increment()" />
                             </form>
                         </div>
                     </div>
@@ -577,7 +636,7 @@
         var radios = document.getElementsByName('options');
         //var x="radio_marked"+window.counter;
         //alert(x);
-
+        var c_id = <?php echo json_encode($cid); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -610,6 +669,7 @@
             'radio1': radio1,
             'qid': qid,
             'reid': reid,
+            'c_id': c_id,
         };
         //alert(pass_data);
         $.ajax({
@@ -632,6 +692,7 @@
         var radios = document.getElementsByName(m);
         //var x="radio_marked"+window.counter;
         //alert(x);
+        var c_id = <?php echo json_encode($cid); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -646,6 +707,7 @@
             'radio1': radio1,
             'qid': qid,
             'reid': reid,
+            'c_id': c_id,
         };
         //alert(pass_data);
         $.ajax({

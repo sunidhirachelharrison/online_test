@@ -10,10 +10,12 @@
     //$stmt->execute();
     //$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
     //$result = 
-    
+
+    $sql="SELECT * FROM course";
+    //$conn->exec($query);
+    $stmt_sql = $conn->query($sql);
         
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -23,10 +25,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="shortcut icon" href="images/tmu.png">
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>View Attendance</title>
+
+    <!-- Bootstrap CSS -->  
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <title>view exam - CTLD</title>
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -63,6 +71,11 @@
 
     </script>
 
+        <style>
+        .bg-orange{
+            background: #ea5e0d;
+        }
+        </style>
 </head>
 
 <body>
@@ -72,10 +85,7 @@
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Vew Attendance</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand" href="#">Admin Panel - Vew Attendance</a>
     </nav>
     <br />
     <div class="container-fluid">
@@ -83,7 +93,10 @@
             <div class="col-1"></div>
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">Select Test:</div>
+                    <div class="card-header">
+                        <span class="align-middle">Select Test:</span> 
+                        <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                    </div>
                     <div class="card-body">
                         <div id="">
 
@@ -91,6 +104,7 @@
                                 <form action="#" method="post">
                                     Test Name:
                                     <select name="test_ids" id="test_ids" class="">
+                                        <!--                                        <option value="None">None</option>-->
                                         <?php
                 $name="";
                 while($result=$stmt->fetch())
@@ -102,6 +116,8 @@
 
                                         <?php  } ?>
                                     </select><br />
+
+
                                     <!--
            <select name="session" id="session">
                <option value="None">None</option>
@@ -130,7 +146,7 @@
            </select>
 -->
 
-                                    Program:
+                                    </br>Program:
                                     <select name="program" id="program">
                                         <option value="None">None</option>
 
@@ -151,8 +167,27 @@
                                         <?php 
                                     }
                                         ?>
-                                    </select>
-                                    <input type="submit" name="show" value="SHOW" class="btn btn-danger" id="show">
+                                    </select><br />
+
+                                    <br>Course Name:
+                                    <select name="course_ids" id="course_ids" class="">
+                                        <option value="None">None</option>
+                                        <!--                                        <option value="None">None</option>-->
+                                        <?php
+                $cname="";
+                while($result_2=$stmt_sql->fetch())
+                {
+                    $cname=$result_2['C_Name'];
+                    $ccode=$result_2['C_Code'];
+                    $cid=$result_2['C_ID'];
+                ?>
+                                        <option value="<?php echo $cid; ?>"><?php echo $cname; ?></option>
+
+                                        <?php  } ?>
+                                    </select><br />
+
+<br>
+                                    <input type="submit" name="show" value="SHOW" class="btn bg-orange text-white" id="show">
                                 </form>
                             </div>
 
@@ -162,11 +197,22 @@
                     {
                         $val=$_POST['test_ids'];
                         $prog=$_POST['program'];
+                        $c_id=$_POST['course_ids'];
 //                        $session=$_POST['session'];
 //                        $sem=$_POST['sem'];
                         
                          //   echo $val;
                     $qry="SELECT distinct(R_Enrollment_No),R_Shift FROM result WHERE R_T_ID='".$val."'";
+//                        if($c_id!=='None')
+// {
+// $qry="SELECT distinct(R_Enrollment_No),R_Shift FROM result WHERE R_T_ID='".$val."' and R_C_ID='".$c_id."'";
+//
+// }
+// if($c_id!=='None')
+// {
+// $qry="SELECT distinct(R_Enrollment_No),R_Shift FROM result WHERE R_T_ID='".$val."' and R_C_ID='".$c_id."'";
+//
+// }
                     $stmt = $conn->query($qry);
                     
                     $i=0;
@@ -192,7 +238,8 @@
 
                             <div class="table-responsive mt-3" id="div_to_print">
                                 <h5>
-                                    <center>Attendance <?php if($prog!="None"){echo " of " . $prog . " <script>document.write(v);</script> "; } ?></center>
+                                    <center>Attendance <?php if($c_id!="None"){ echo "of ".$cname." ("; }
+                        if($prog!="None"){echo "  " . $prog . " <script>document.write(v);</script> )"; } ?></center>
                                 </h5>
                                 <table border="1" class="table table-bordered table-hover" id="result_table">
                                     <tr>
@@ -202,6 +249,9 @@
                                         <th>Enrollment No.</th>
                                         <th>Name</th>
                                         <th>Program</th>
+                                        <th>Year</th>
+                                        <th>Section</th>
+                                        <!--                                        <th>Course Name</th>-->
                                         <th>Test Name</th>
                                         <th>Test Date</th>
                                         <th>Test Time</th>
@@ -216,10 +266,19 @@
                             if($prog=="None"){
                                 $sql1="SELECT * FROM user WHERE U_Enrollment_No='".$enrno."'";
                             }
-                            else
+                            else if($c_id=="None")
                             {
                                 $sql1="SELECT * FROM user WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."'";
-                            }                           
+                            }
+                            else
+                            {
+                                /*
+                                $sql1="SELECT * FROM user 
+                                WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."'";*/
+                                 $sql1="SELECT distinct(U_Enrollment_No),U_Name,U_Program,U_Year,U_Section FROM user u join result r
+                            on u.U_Enrollment_No=r.R_Enrollment_No
+                            WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."' and r.R_C_ID='".$c_id."'";
+                            }
                             
                             $st1 = $conn->query($sql1);
 
@@ -263,6 +322,9 @@
                                         <td><?php echo $re1['U_Enrollment_No'];  ?></td>
                                         <td><?php echo $re1['U_Name'];  ?></td>
                                         <td><?php echo $re1['U_Program'];  ?></td>
+                                        <td><?php echo $re1['U_Year'];  ?></td>
+                                        <td><?php echo $re1['U_Section'];  ?></td>
+                                        <!--                                        <td><?php //echo $cname;  ?></td>-->
                                         <td><?php echo $tname;  ?></td>
                                         <td><?php echo $tdate;  ?></td>
                                         <td><?php echo $ttime;  ?></td>
@@ -275,19 +337,31 @@
                         {
                             $qy="SELECT * FROM user";
                         }
-                        else
+                        else if($c_id=="None")
                         {
                             $qy="SELECT * FROM user WHERE U_Program='".$prog."'";
+                        }
+                        else 
+                        {
+                          /*  
+                            $qy="SELECT distinct(R_Enrollment_No) FROM user u join result r
+                            on u.U_Enrollment_No=r.R_Enrollment_No
+                            WHERE u.U_Program='".$prog."' and r.R_C_ID='".$c_id."'";
+                            */
+                            $qy="SELECT distinct(R_Enrollment_No) FROM user u join result r
+                            on u.U_Enrollment_No=r.R_Enrollment_No
+                            WHERE u.U_Program='".$prog."'";
+                        
                         }
                         $s = $conn->query($qy);
                         $r=$s->rowCount();  //to count total strength
                     
                 ?>
 
-                                        <th colspan="4">
+                                        <th colspan="5">
                                             <center>Students Appeared for test :<?php echo "  ". $sno; ?></center>
                                         </th>
-                                        <th colspan="4">
+                                        <th colspan="5">
                                             <center>Total Students :<?php echo "  ". $r; ?></center>
                                         </th>
                                     </tr>
@@ -299,11 +373,11 @@
                             </div>
 
                             <div class="float-right p-2">
-                                <a href="#" id="save" class="btn btn-danger" onClick="javascript:fnExcelReport();">SAVE AS EXCEL SHEET</a>
+                                <a href="#" id="save" class="btn bg-orange text-white" onClick="javascript:fnExcelReport();">SAVE AS EXCEL SHEET</a>
                             </div>
 
                             <div class="float-right p-2">
-                                <a href="#" id="print" class="btn btn-danger" onClick="javascript:PrintDiv();">PRINT</a>
+                                <a href="#" id="print" class="btn bg-orange text-white" onClick="javascript:PrintDiv();">PRINT</a>
                             </div>
 
 

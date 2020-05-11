@@ -55,7 +55,7 @@ if(isset($_POST['add']))
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a></nav>
+        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -66,7 +66,7 @@ if(isset($_POST['add']))
                     <h4>Enter the new instruction</h4><br />
 
                     <label for="description"><b> Description:</b></label>
-                    <input type="textarea" class="form-control" name="description" id="description" required /><br />
+                    <input type="textarea" class="form-control" name="description" id="description" onfocusout="return validate_instruction(this.value)" required /><br />
 
 
                     <input type="submit" class="btn aa mt-3" name="add" value="ADD" id="add" />
@@ -90,5 +90,33 @@ if(isset($_POST['add']))
     //
     //   d.innerHTML += "<br />Question: <input type='text' class='form-control'/><br/>Option A: <input type='text' class='form-control' style='width:150px'/>Option B: <input type='text' class='form-control' style='width:150px'/>Image with option A(if any): <input type='file' class='form-control'/><br/>&nbsp;Image with option B(if any): <input type='file' class='form-control'/><br/>Option C: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option C(if any): <input type='file' class='form-control'/><br/>Option D: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option D(if any): <input type='file' class='form-control'/><br/>Option E: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option E(if any): <input type='file' class='form-control'/><br/>";
     //}
+    var validating = false;
+
+    function validate_instruction(inputval) {
+        if (inputval == null || inputval == "" || inputval == " ") {
+            if (validating == false) {
+                validating = true;
+            }
+            alert("Instruction can't be blank");
+            setTimeout(function() {
+                document.getElementById("description").focus();
+                validating = false;
+            }, 1);
+            return false;
+        }
+        for (var i = 0, len = inputval.length; i < len - 1; ++i) {
+            if ((inputval.charAt(i) === ' ') && (inputval.charAt(i + 1) === ' ')) {
+                if (validating == false) {
+                    validating = true;
+                }
+                alert('Instruction cannot have adjacent spaces!');
+                setTimeout(function() {
+                    document.getElementById("description").focus();
+                    validating = false;
+                }, 1);
+                return false;
+            }
+        }
+    }
 
 </script>

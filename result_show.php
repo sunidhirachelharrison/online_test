@@ -12,7 +12,11 @@
     $obt_ma=$_GET['m1'];
     $tot_m=$_GET['m2'];
     $name=$_GET['n'];
-    
+    $progname=$_GET['progname'];
+//    $courseid=$_GET['courseid'];
+//    $c_code=$_GET['coursecode'];
+//    echo '<script>alert('.$c_code.');';
+
 
     $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'";
     $r=mysqli_query($con,$q);
@@ -159,8 +163,27 @@
     }
 
     //to count total questions in test
-    $sql="SELECT * FROM questions WHERE Q_Flag='0'";
+    $sql_fetch_pid="SELECT Prog_ID FROM program WHERE Prog_Name='".$progname."'";
+    $re_flag=mysqli_query($con,$sql_fetch_pid);
+    $pid="";
+    if($re_flag)
+    {
+        $re_row=mysqli_fetch_assoc($re_flag);
+        $pid=$re_row['Prog_ID'];
+    }
+
+    $sql_fetch_cid="SELECT C_ID FROM course WHERE C_Prog_ID='".$pid."' and C_Flag='1'";
+    $re_flag2=mysqli_query($con,$sql_fetch_cid);
+    $cid="";
+    if($re_flag2)
+    {
+        $re_row2=mysqli_fetch_assoc($re_flag2);
+        $cid=$re_row2['C_ID'];
+    }
+
+    $sql="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_C_ID='".$cid."'";
     $re=mysqli_query($con,$sql);
+    
     if($re)
     {
         $tot_ques=mysqli_num_rows($re);
@@ -224,12 +247,13 @@
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Center for Teaching, Learning & Development</a>
+        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
     <br />
+    <!--    <div><?php //echo $c_code. "*********"; ?></div>-->
     <div class="container-fluid">
         <div id="printdiv">
             <div class="row">
@@ -243,7 +267,7 @@
                                 <div class="table-responsive" id="div_to_print">
                                     <table class="table table-bordered table-hover" id="result_table">
                                         <tr>
-                                            <th>Category</th>
+                                            <th>Course Name</th>
                                             <th>Correct</th>
                                             <th>Incorrect</th>
                                             <th>Correct sub-parts(Long Questions)</th>
@@ -253,7 +277,7 @@
                                             <th>Obtained Marks</th>
                                             <th>Total Marks</th>
                                         </tr>
-                                        <th>Quantitative Aptitude</th>
+                                        <th><?php echo $progname; ?></th>
                                         <td><?php echo $correct; ?></td>
                                         <td><?php echo $incorrect ; ?></td>
                                         <td><?php echo $correct2; ?></td>

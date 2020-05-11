@@ -67,12 +67,14 @@ a:focus{
 
 #sidebar ul li a{
 	padding: 10px;
-	font-size: 1.1em;
+	font-size: 1.0em;
 	display: block;
+	color:#fff;
 }
 #sidebar ul li a:hover {
-    color: #7386D5;
-    background: #fff;
+    color: #fff;
+	background: #ea5e0d;
+	
 }
 
 #sidebar ul li.active>a,
@@ -83,13 +85,13 @@ a[aria-expanded="true"] {
 a[data-toggle="collapse"] {
     position: relative;
 }
-.dropdown-toggle::after {
+/* .dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
-}
+} */
 
 ul ul a {
     font-size: 0.9em !important;
