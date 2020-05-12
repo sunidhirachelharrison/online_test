@@ -9,11 +9,11 @@
 	
 
 	//if user is not logged in, forward to login page
-    if(!(isset($_SESSION['U_Enrollment_No'])) || ($_SESSION['User']!="admin") )
-    {
-//        echo '<script>alert("You do not have the priviledge to reset the password! Please contact the admin!")</script>';
-        header("location:index.php");
-    }
+    // if(!(isset($_SESSION['U_Enrollment_No'])) || ($_SESSION['User']!="admin") )
+    // {
+    //    echo '<script>alert("You do not have the priviledge to reset the password! Please contact the admin!")</script>';
+    //     header("location:index.php");
+    // }
     
 	
             
@@ -21,58 +21,58 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Reset Password</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>Add New Instructions</title>
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
+        th,td{
+            text-align: center;
         }
-
     </style>
-</head>
 
+</head>
 <body>
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
+        <a class="navbar-brand" href="#">Admin Panel - Reset Password of User</a></nav>
 
     <form action="#" method="post">
-        <div class="container mt-3 mb-5">
+        <div class="container mt-5 mb-5">
             <div class="row">
                 <div class="col-sm-12">
-                    <h1>Reset Password</h1>
+                    <!-- <h1>Reset Password</h1> -->
 
                     <label for="value"><b>Enter Enrollment No/Employee ID of user:</b></label>
                     <input type="text" class="form-control" placeholder="" id="enrollment_no" name="enrollment_no" value="<?php echo htmlspecialchars($_POST['enrollment_no'] ?? '', ENT_QUOTES); ?>" onfocusout="return validate_enrno(this.value)" required /><br />
 
 
-                    <input type="submit" class="btn aa " name="find_user" value="FIND USER" />
-
+                    <input type="submit" class="btn bg-orange text-white" name="find_user" value="FIND USER" />
+                    <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
 
                 </div>
-
-
-
-
-
 
             </div>
 
         </div>
-
-
 
         <?php
     
@@ -103,24 +103,24 @@
         <div class="container">
 
 
-            <div style="background:#e9ecef" class="p-4 mb-5 mt-2">
-                <table border="2" id="search_result_table">
+            <div style="" class="mb-5">
+                <table border="" id="search_result_table" style="width:100%;" >
 
-                    <th>
+                    
 
-                    <td>Enrollment No.</td>
-                    <td>Name</td>
-                    <td>User Type</td>
-                    <td>Program</td>
-                    <td>Section</td>
-                    <td>Branch</td>
-                    <td>Year</td>
+                    <th>Enrollment No.</th>
+                    <th>Name</th>
+                    <th>User Type</th>
+                    <th>Program</th>
+                    <th>Section</th>
+                    <th>Branch</th>
+                    <th>Year</th>
                     <!--
                        <td>Quantitative Aptitude Marks</td>                   
                        <td>Verbal Aptitude Marks</td>                   
 -->
                     <!--                       <td>Total Marks</td>                       -->
-                    </th>
+                    
 
                     <?php
                 
@@ -129,7 +129,7 @@
                     {
                         
                         
-                        echo "<tr><td></td><td>{$row['U_Enrollment_No']}</td><td>{$row['U_Name']}</td><td>{$row['U_User_Type']}</td><td>{$row['U_Program']}</td><td>{$row['U_Section']}</td><td>{$row['U_Branch']}</td><td>{$row['U_Year']}</td></tr>";
+                        echo "<tr><td>{$row['U_Enrollment_No']}</td><td>{$row['U_Name']}</td><td>{$row['U_User_Type']}</td><td>{$row['U_Program']}</td><td>{$row['U_Section']}</td><td>{$row['U_Branch']}</td><td>{$row['U_Year']}</td></tr>";
                         
                     }
                 
@@ -144,28 +144,36 @@
             </table>
 
         </div>
+        <div class="container">
         <!--    <form action="#" method="post">-->
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-3"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
+            <!-- <div class="col-md-1"></div> -->
+            <div class="col-md-2"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <input type="password" class="form-control" id="new_password" name="new_password" onfocusout="return validate_new_password(this.value)" />
             </div>
+            <div class="col-6"></div>
         </div>
         <br>
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-3"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
+            <!-- <div class="col-md-1"></div> -->
+            <div class="col-md-2"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <input type="password" class="form-control" id="retype_new_password" name="retype_new_password" onfocusout="return validate_retypenew_password(this.value)" />
             </div>
+            <div class="col-6"></div>
         </div>
-
-        <input type="submit" class="btn aa " name="reset_password" id="reset_password" value="RESET PASSWORD" />
-
+<br>
+        <input type="submit" class="btn bg-orange text-white" name="reset_password" id="reset_password" value="RESET PASSWORD" />
+        </div>
     </form>
+    <footer class="mt-5">
+        <div class="text-center">
+            <p>Copyright &copy; Teerthanker Mahaveer University</p>
+        </div>
+    </footer>
 </body>
 <script>
     var validating = false;

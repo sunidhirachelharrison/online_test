@@ -233,7 +233,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Others</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="select_test.php">Set Test to be conducted</a></li>
-                        <li><a class="dropdown-item" href="">Set Courses whose test is to be conducted</a></li>
+                        <li><a class="dropdown-item" href="select_courses_for_test.php">Set Courses whose test is to be conducted</a></li>
                         <li><a class="dropdown-item" href="reset_password_of_user.php">Reset Password of another user</a></li>
                     </ul>
                 </li>

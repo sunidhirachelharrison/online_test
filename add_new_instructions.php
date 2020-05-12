@@ -29,33 +29,38 @@ if(isset($_POST['add']))
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Add New Instruction</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>Add New Instructions</title>
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
-        }
-
     </style>
-</head>
 
+</head>
 <body>
 
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
+        <a class="navbar-brand" href="#">Admin Panel - Add New Instructions</a></nav>
+<!--     
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -78,7 +83,52 @@ if(isset($_POST['add']))
 
         </form>
 
+    </div> -->
+
+    <div class="container">
+        
+        <!-- Page Coding Start -->
+        <div class="" id="formModal">
+            <div class="modal-dialog modal-lg pt-3 pb-3">
+            <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal_title">Enter the New Instruction</h4>
+                            <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <label class="col-md-2">Description:<span class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                    <input type="textarea" class="form-control" name="description" id="description" onfocusout="return validate_instruction(this.value)" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <input type="submit" name="add" id="add" class="btn bg-orange text-white" value="Add" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    <footer class="fixed-bottom">
+        <div class="text-center">
+            <p>Copyright &copy; Teerthanker Mahaveer University</p>
+        </div>
+    </footer>
+
     </div>
+
 
 </body>
 

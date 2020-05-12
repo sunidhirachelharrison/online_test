@@ -259,6 +259,7 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-md-12 p-4">
+
                     <div class="card">
                         <div class="card-header">Student's Score<br />Enrollment No: <?php  echo $ro . "<br/> Name: " .$name ; ?></div>
                         <div class="card-body">
@@ -354,7 +355,7 @@
 
                                     <?php
                     
-                    $queryA="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Passage_ID is not null";
+                    $queryA="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Passage_ID is not null AND Q_Prog_ID='".$pid."' AND Q_C_ID='".$cid."'";
                     $rowA=mysqli_query($con,$queryA);
                     $pas_id=array();
                     $x=0;

@@ -33,6 +33,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <!-- Required meta tags -->
@@ -43,7 +44,7 @@
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Select Test</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
@@ -51,51 +52,53 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
-        background: #ea5e0d;
-        } 
+        .bg-orange {
+            background: #ea5e0d;
+        }
+
     </style>
 </head>
+
 <body>
-   
-   <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
-	<img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
-	</div>
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		<a class="navbar-brand" href="#">Admin Panel - Select Test</a></nav>
-    
-        <div class="container-fluid mt-4">
+
+    <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
+        <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
+    </div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="#">Admin Panel - Select Test</a></nav>
+
+    <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-1"></div>
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
-                        <span class="align-middle">Select:</span> 
+                        <span class="align-middle">Select:</span>
                         <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
                     </div>
                     <div class="card-body">
                         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
                             <div class="p-3">
                                 <label>Select the test to be held:</label>
-                                <select name="test_id" id="test_id" class="form-control">  
-                                    <option value="None">None</option>  
-                                        <?php 
+                                <select name="test_id" id="test_id" class="form-control">
+                                    <!--                                    <option value="None">None</option>-->
+                                    <?php 
                                             //fetching and displaying test names row-wise in a dropdown list
                                             while($row=mysqli_fetch_assoc($r))
                                             {
                                         ?>
                                     <option value="<?php echo $row['T_ID']; ?>"><?php echo $row['T_Name'] . "&nbsp;&nbsp;" . $row['T_Date']; ?></option>
-                                        <?php                     
+                                    <?php                     
                                             }
                                         ?>
                                 </select>
-                                        <?php
+                                <?php
                                             }
                                         ?>
-                                        <br>
-                                <input type="submit" id="select" name="select" class="btn bg-orange text-white" value="DONE"/>
+                                <br>
+                                <input type="submit" id="select" name="select" class="btn bg-orange text-white" value="DONE" />
                             </div>
-                            </form>     
+                        </form>
                     </div>
                 </div>
             </div>
@@ -104,12 +107,31 @@
 
 
 
-            
-               
-                
-</body>
-</html>
 
+
+
+</body>
+
+</html>
+<!--
+<script>
+    var validating = false;
+
+    function validate_test_id(inputval) {
+        if (inputval == "None") {
+            if (validating == false) {
+                validating = true;
+            }
+            alert("Please select a test/exam!");
+            setTimeout(function() {
+                document.getElementById("test_id").focus();
+                validating = false;
+            }, 1);
+            return false;
+        }
+    }
+</script>
+-->
 
 <?php  
 

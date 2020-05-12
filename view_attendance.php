@@ -29,12 +29,12 @@
     <link rel="shortcut icon" href="image/tmu.png">
     <title>View Attendance</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
     <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -71,11 +71,12 @@
 
     </script>
 
-        <style>
-        .bg-orange{
+    <style>
+        .bg-orange {
             background: #ea5e0d;
         }
-        </style>
+
+    </style>
 </head>
 
 <body>
@@ -94,7 +95,7 @@
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
-                        <span class="align-middle">Select Test:</span> 
+                        <span class="align-middle">Select Test:</span>
                         <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
                     </div>
                     <div class="card-body">
@@ -104,15 +105,18 @@
                                 <form action="#" method="post">
                                     Test Name:
                                     <select name="test_ids" id="test_ids" class="">
-                                        <!--                                        <option value="None">None</option>-->
+                                        <option value="None">None</option>
                                         <?php
                 $name="";
                 while($result=$stmt->fetch())
                 {
                     $name=$result['T_Name'];
                     $d=$result['T_Date'];
+                    $ob=new DateTime($d);
+                    $d=date_format($ob,"d F Y");
+                    
                 ?>
-                                        <option value="<?php echo $result['T_ID']; ?>"><?php echo $result['T_Name']."  held  on ".$result['T_Date']; ?></option>
+                                        <option value="<?php echo $result['T_ID']; ?>"><?php echo $result['T_Name']."  held  on ".$d; ?></option>
 
                                         <?php  } ?>
                                     </select><br />
@@ -186,8 +190,8 @@
                                         <?php  } ?>
                                     </select><br />
 
-<br>
-                                    <input type="submit" name="show" value="SHOW" class="btn bg-orange text-white" id="show">
+                                    <br>
+                                    <input type="submit" name="show" value="SHOW" class="btn bg-orange text-white" id="show" onclick="return validate_dropdowns()">
                                 </form>
                             </div>
 
@@ -203,6 +207,14 @@
                         
                          //   echo $val;
                     $qry="SELECT distinct(R_Enrollment_No),R_Shift FROM result WHERE R_T_ID='".$val."'";
+                        
+                    $qry_fetch_names="SELECT * FROM test WHERE T_ID='".$val."'";    //query to fetch the test name and date of selected dropdown 
+                        $stmt_fetch_names = $conn->query($qry_fetch_names);
+                        $result_fetch_names=$stmt_fetch_names->fetch();
+                        $testname=$result_fetch_names['T_Name'];
+                        $testdate=$result_fetch_names['T_Date'];
+                        $obj=new DateTime($testdate);
+                        $testdate=date_format($obj,"d F Y");
 //                        if($c_id!=='None')
 // {
 // $qry="SELECT distinct(R_Enrollment_No),R_Shift FROM result WHERE R_T_ID='".$val."' and R_C_ID='".$c_id."'";
@@ -239,7 +251,7 @@
                             <div class="table-responsive mt-3" id="div_to_print">
                                 <h5>
                                     <center>Attendance <?php if($c_id!="None"){ echo "of ".$cname." ("; }
-                        if($prog!="None"){echo "  " . $prog . " <script>document.write(v);</script> )"; } ?></center>
+                        if($prog!="None"){ echo "  " . $prog . " ";} echo $testname." held on ".$testdate." ";  if($c_id!="None"){ echo ")"; } ?></center>
                                 </h5>
                                 <table border="1" class="table table-bordered table-hover" id="result_table">
                                     <tr>
@@ -348,10 +360,11 @@
                             on u.U_Enrollment_No=r.R_Enrollment_No
                             WHERE u.U_Program='".$prog."' and r.R_C_ID='".$c_id."'";
                             */
-                            $qy="SELECT distinct(R_Enrollment_No) FROM user u join result r
+                            /*$qy="SELECT distinct(R_Enrollment_No) FROM user u join result r
                             on u.U_Enrollment_No=r.R_Enrollment_No
                             WHERE u.U_Program='".$prog."'";
-                        
+                        */
+                            $qy="SELECT * FROM user WHERE U_Program='".$prog."'";
                         }
                         $s = $conn->query($qy);
                         $r=$s->rowCount();  //to count total strength
@@ -404,6 +417,33 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        function validate_dropdowns() {
+            //alert("Validating!");
+            var test = document.getElementById('test_ids').value;
+            var prog = document.getElementById('program').value;
+            var course = document.getElementById('course_ids').value;
+
+
+            if (test == "None") {
+                alert("Please select a test/exam!");
+                document.getElementById("test_ids").focus();
+                return false;
+            }
+            //            } else if (prog == "None") {
+            //                alert("Please select a program!");
+            //                document.getElementById("program").focus();
+            //                return false;
+            //            } else if (course == "None") {
+            //                alert("Please select a course!");
+            //                document.getElementById("course_ids").focus();
+            //                return false;
+            //            }
+        }
+
+    </script>
+
 </body>
 
 </html>

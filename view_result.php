@@ -32,12 +32,12 @@
     <link rel="shortcut icon" href="image/tmu.png">
     <title>View Attendance</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
     <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script type="text/javascript">
@@ -100,11 +100,12 @@
 
     </script>
 
-<style>
-        .bg-orange{
+    <style>
+        .bg-orange {
             background: #ea5e0d;
         }
-</style>
+
+    </style>
 
 </head>
 
@@ -142,10 +143,12 @@
                 $name="";
                 while($result=$stmt->fetch())
                 {
-                    //$name=$result['T_Name'];
-                    //$d=$result['T_Date'];
+                    $te_name=$result['T_Name'];
+                    $te_date=$result['T_Date'];
+                    $ob=new DateTime($te_date);
+                    $d=date_format($ob,"d F Y");
                 ?>
-                                        <option value="<?php echo $result['T_ID']; ?>"><?php echo $result['T_Name']."  held  on ".$result['T_Date']; ?></option>
+                                        <option value="<?php echo $result['T_ID']; ?>"><?php echo $result['T_Name']."  held  on ".$d; ?></option>
 
                                         <?php  } ?>
                                     </select><br />
@@ -205,10 +208,10 @@
                                         <option value="E">E</option>
                                         <option value="F">F</option>
                                     </select><br />
-<br>
+                                    <br>
 
 
-                                    <input type="submit" name="show" value="SHOW RESULT" class="btn bg-orange text-white" id="show">
+                                    <input type="submit" name="show" value="SHOW RESULT" class="btn bg-orange text-white" id="show" onclick="return validate_dropdowns()">
                                 </form>
                             </div>
 
@@ -220,6 +223,8 @@
                         $test_id=$_POST['test_ids'];
                         $prog_id=$_POST['program'];
                         $course_id=$_POST['course'];
+//                        $_SESSION['temp_course_id']=$course_id;
+//                        echo '<script>alert('.$_SESSION['temp_course_id'].');</script>';
                         $year=$_POST['year'];
                         $section=$_POST['section'];
 //                        $session=$_POST['session'];
@@ -296,8 +301,8 @@
                             $q3="SELECT * FROM test WHERE T_ID='".$test_id."'";
                             $r3=mysqli_query($con,$q3);
                             $re3=mysqli_fetch_assoc($r3);
-                            $m=$re3['T_Marks'];
-                            $name=$re3['T_Name'];
+                            $m=$re3['T_Marks']; //fetching total marks of the current test
+                            $name=$re3['T_Name'];   //fetching name of the current test
                             //$tot_ques=$re3['T_Marks'];
                             $obj=new DateTime($re3['T_Date']);
                             $d=date_format($obj,"d F Y");
@@ -394,8 +399,7 @@
                                
                             $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', COUNT(*) as 'num1',r.R_C_ID as 'rcid' FROM result r WHERE r.R_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' ";    
                                
-                            $q5="SELECT SUM(pr.PR_Score) as 'total2' , COUNT(*) as 'num2',pr.PR_C_ID 
-                            FROM passage_result pr WHERE  pr.PR_T_ID='".$test_id."' AND pr.PR_Enrollment_No='".$rno."' ";   
+                            $q5="SELECT SUM(pr.PR_Score) as 'total2', COUNT(*) as 'num2', pr.PR_C_ID  as 'prcid' FROM passage_result pr WHERE  pr.PR_T_ID='".$test_id."' AND pr.PR_Enrollment_No='".$rno."' and pr.PR_C_ID='".$course_id."'";   
                                
                             $marks=0;
                             $total1=0;
@@ -413,8 +417,8 @@
                                 $total1=$re2['total1'];
                                 $total2=$re5['total2'];
                                 //$total1=$total1 + 0;
-//                                echo "@@@@".$total1."##";
- //  echo "***".$total2."//<br/>";
+//                                echo "@@@@".$x2."##";
+//   echo "***".$total2."//<br/>";
 //                                $cid=$re2['rcid'];
                                 
 //                                if($x2!=0)
@@ -502,6 +506,45 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+
+
+    <script>
+        function validate_dropdowns() {
+            //alert("Validating!");
+            var test = document.getElementById('test_ids').value;
+            var prog = document.getElementById('program').value;
+            var course = document.getElementById('course').value;
+            var year = document.getElementById('year').value;
+            var section = document.getElementById('section').value;
+
+            if (test == "None") {
+                alert("Please select a test/exam!");
+                document.getElementById("test_ids").focus();
+                return false;
+            } else if (prog == "None") {
+                alert("Please select a program!");
+                document.getElementById("program").focus();
+                return false;
+            } else if (course == "None") {
+                alert("Please select a course!");
+                document.getElementById("course").focus();
+                return false;
+            } else if (year == "None") {
+                alert("Please select an year!");
+                document.getElementById("year").focus();
+                return false;
+            }
+            //            } else if (section == "None") {
+            // alert("Please select a section!");
+            // document.getElementById("section").focus();
+            // return false;
+            // }
+
+        }
+
+    </script>
+
 
 
 

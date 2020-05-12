@@ -571,10 +571,10 @@
                             <div class="container">
                                 <div class="row">
                                     <?php 
-                    for($z=1;$z<=35;$z++)
+                    for($z=1;$z<=200;$z++)
                     {
                 ?>
-                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==35){
+                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==200){
                 ?>
                 document.getElementById('submit').style.visibility = 'visible';
         

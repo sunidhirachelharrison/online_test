@@ -579,6 +579,7 @@
 
             //}
 
+            //            color_btns();
 
         }
 
@@ -832,42 +833,67 @@
 </script>
 
 <script>
-    //window.onload = color_btns(); //color the btns on page load using saved state of btns
-    //setTimeout(color_btns(), 1000); //calling color_btns func after 1000 ms so as to load timer on window load
+    //    window.onload = color_btns(); //color the btns on page load using saved state of btns
+    //    window.onload = setTimeout(color_btns(), 1000); //calling color_btns func after 1000 ms so as to load timer on window load
     color_btns(); //color the btns on page load using saved state of btns
+    //    document.getElementById(3).style.background = '#FF0000';
 
+    //    setTimeout(function() {
+    // color_btns();
+    // }, 400);
     function color_btns() {
 
         var $red_btns = <?php echo json_encode($red_btns); ?>;
         var $green_btns = <?php echo json_encode($green_btns); ?>;
         var $yellow_btns = <?php echo json_encode($yellow_btns); ?>;
         var $purple_btns = <?php echo json_encode($purple_btns); ?>;
+
         setTimeout(function() {
-            //alert("Page ready!");
-            //document.getElementById(1).style.background = '#EE82EE';
+
+
             $red_btns.forEach(color_it_red);
-            $green_btns.forEach(color_it_green);
-            $yellow_btns.forEach(color_it_yellow);
-            $purple_btns.forEach(color_it_purple);
 
             function color_it_red(item) {
+
                 document.getElementById(item - 1).style.background = '#FF0000';
+
             }
+
+        }, 300);
+
+
+
+        setTimeout(function() {
+            $green_btns.forEach(color_it_green);
 
             function color_it_green(item) {
                 document.getElementById(item - 1).style.background = '#00FF00';
             }
 
+
+        }, 400);
+
+        setTimeout(function() {
+            $yellow_btns.forEach(color_it_yellow);
+
             function color_it_yellow(item) {
                 document.getElementById(item - 1).style.background = '#FFFF00';
             }
+
+
+
+        }, 500);
+
+        setTimeout(function() {
+            $purple_btns.forEach(color_it_purple);
 
             function color_it_purple(item) {
                 document.getElementById(item - 1).style.background = '#EE82EE';
             }
 
 
-        }, 300);
+        }, 600);
+
     }
 
 </script>
