@@ -11,10 +11,20 @@
 
 
     include("DB_connect.php");  //for database connection
-          //for timer display on top of the page
+          
+//fetching total questions of test to set the buttons and questions
+$fetch_tot_ques="SELECT * FROM test WHERE T_Flag='0'";
+$total_no_of_questions="";
+$fetch_tot_ques_check=mysqli_query($con,$fetch_tot_ques);
+if($fetch_tot_ques_check)
+{
+    $fetch_tot_ques_val=mysqli_fetch_assoc($fetch_tot_ques_check);
+    $total_no_of_questions=$fetch_tot_ques_val['T_Questions'];
+}
+//echo $total_no_of_questions;
       
 
-//select the program id and course id to fetch questions and stor results course and program wise
+//select the program id and course id to fetch questions and store results course and program wise
 
     $sq="SELECT * FROM program p join course c
     ON c.C_Prog_ID=p.Prog_ID
@@ -34,6 +44,7 @@
         $cid=$ro_flag['C_ID'];
         $cname=$ro_flag['C_Name'];
         $ccode=$ro_flag['C_Code'];
+        $_SESSION['Course_Code']=$ccode;
         $proid=$ro_flag['Prog_ID'];
 //        $_SESSION['U_Prog_ID']=$proid;
  // $_SESSION['U_C_ID']=$cid;
@@ -41,7 +52,7 @@
 
 
         //select 35 questions from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
-        $sql="SELECT * FROM questions WHERE Q_Flag='0' and Q_Prog_ID='".$proid."' and Q_C_ID='".$cid."' limit 120";
+        $sql="SELECT * FROM questions WHERE Q_Flag='0' and Q_Prog_ID='".$proid."' and Q_C_ID='".$cid."' limit ".$total_no_of_questions."";
         $row=mysqli_query($con,$sql);
         
         if(!($row))
@@ -127,6 +138,8 @@
 // }
 
 //***********************************************************************************
+
+
 
 ?>
 
@@ -222,17 +235,33 @@
 
         .sd {
             position: absolute;
-            bottom: 10;
+            bottom: 0;
         }
 
         .dd {
             position: relative;
         }
 
+
+
+
+        div.scroll {
+            margin: 4px, 4px;
+            padding: 12px;
+            background-color: #fff;
+            width: 102%;
+            height: 320px;
+            overflow-x: hidden;
+            overflow-x: auto;
+            text-align: justify;
+        }
+
     </style>
     <script type="text/javascript">
         window.counter = 0;
         var selected_qid = <?php echo json_encode($qu); ?>;
+        var total_no_of_questions = <?php echo json_encode($total_no_of_questions); ?>;
+        //        alert(total_no_of_questions);
         showQuestion(selected_qid[counter]);
 
         //to show next question:increment the counter
@@ -269,11 +298,11 @@
 
             //**************************************************************
             counter = counter + 1;
-            if ((counter == 0) || (counter < 34)) //replace 5 by 34 to fetch 35 questions
+            if ((counter == 0) || (counter < (total_no_of_questions - 1))) //replace 5 by 34 to fetch 35 questions
             {
                 showQuestion(selected_qid[counter], counter);
 
-            } else if (window.counter == 34) //replace 5 by 34 to fetch 35 questions
+            } else if (window.counter == (total_no_of_questions - 1)) //replace 5 by 34 to fetch 35 questions
             {
                 //displays last question
                 showQuestion(selected_qid[counter], window.counter);
@@ -531,7 +560,7 @@
                 <div class="text-center"><b><?php echo $tname . "<br/>". $cname . "("  . $ccode . ")<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
             </div>
             <div class="col-12 col-lg-4 text-center align-self-end"><br>
-                <div class=""><b><?php include("timer1.php"); ?></b></div>
+                <div class=""><b><?php include("complex_timer.php"); ?></b></div>
             </div>
         </div>
     </div>
@@ -552,12 +581,14 @@
                             <div id="txtHint"><b>Question and options will be listed here...</b></div>
                         </div>
                         <div class="col-12 col-lg-12 col-sm-12 sd">
-                            <form action="thankyou_page.php" method="post" class="button_set">
-                                <input type="button" class="previous c" id="previous" name="previous" value="PREVIOUS" onclick="show_previous()" />
-                                <input type="button" id="marked" class="c" name="marked" value="MARK FOR REVIEW" onclick="mark_for_review();" />
-                                <button name="submit" id="submit" style="visibility:hidden" onclick="done();" class="btn-danger float-right d">SUBMIT</button>
-                                <input type="button" class="next float-right c mr-1" id="next" name="next" value=" SAVE & NEXT" onclick="increment()" />
-                            </form>
+                            <div class="container">
+                                <form action="thankyou_page.php" method="post" class="button_set">
+                                    <input type="button" class="previous c" id="previous" name="previous" value="PREVIOUS" onclick="show_previous()" />
+                                    <input type="button" id="marked" class="c" name="marked" value="MARK FOR REVIEW" onclick="mark_for_review();" />
+                                    <button name="submit" id="submit" style="visibility:hidden" onclick="done();" class="btn-danger float-right d mr-3">SUBMIT</button>
+                                    <input type="button" class="next float-right c mr-1" id="next" name="next" value="SAVE & NEXT" onclick="increment()" />
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -568,13 +599,15 @@
                 <div class="container mt-3 bl">
                     <div class="row">
                         <div class="col-lg-12 col-12">
-                            <div class="container">
+                            <!-- <div class="container"> -->
+                            <div class="scroll">
                                 <div class="row">
+
                                     <?php 
-                    for($z=1;$z<=200;$z++)
+                    for($z=1;$z<=$total_no_of_questions;$z++)
                     {
                 ?>
-                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==200){
+                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==$total_no_of_questions){
                 ?>
                 document.getElementById('submit').style.visibility = 'visible';
         
@@ -591,8 +624,8 @@
                                     <?php
                     }
                 ?>
-
                                 </div>
+                                <!-- </div> -->
                             </div>
                             <br>
                             <img src="image/instructions.jpg" class="img-fluid pb-3" width=100% height=190>
@@ -730,10 +763,31 @@
 </script>
 
 <!--
+<script type="text/javascript">
+    window.onbeforeunload = function() {
+        alert("You can not referesh the page!");
+        return false;
+
+    }
+</script>
+-->
+<script type="text/javascript">
+    //script to disable F5 for page refresh
+    function disableF5(e) {
+        if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault();
+    };
+
+    $(document).ready(function() {
+        $(document).on("keydown", disableF5);
+    });
+
+</script>
+
 <script>
     setInterval(function() {
-        var rollno = <?php //echo json_encode($_SESSION['U_Enrollment_No']); ?>;
+        var rollno = <?php echo json_encode($_SESSION['U_Enrollment_No']); ?>;
         var pass_data = {
+            'hours': hours,
             'mins': minutes,
             'secs': seconds,
             'rollno': rollno,
@@ -747,7 +801,6 @@
         });
         //        return false;
 
-    }, 1000);
+    }, 30000);
 
 </script>
--->

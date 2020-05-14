@@ -13,6 +13,25 @@
     }
 
 
+//select test details
+    $fetch_tid="SELECT * FROM test WHERE T_Flag='0'";        
+    $flag_tid=mysqli_query($con,$fetch_tid);
+
+    $tid="";
+    $tmarks="";
+    $tmins="";
+    $thours="";
+    $totques="";
+    if($flag_tid)
+    {
+        $result3=mysqli_fetch_assoc($flag_tid);
+        $tid=$result3['T_ID'];
+        $thours=$result3['T_Hours'];
+        $tmins=$result3['T_Minutes'];
+        $tmarks=$result3['T_Marks'];
+        $totques=$result3['T_Questions'];
+    }
+
 ?>
 
 <!--************************** HTML CODE ********************************-->
@@ -81,7 +100,7 @@
                 
                     
                     echo  '<div class="panel"><div class="table-responsive"><table class="table table-striped title1">
-                    <tr><td><center><b>S.No.</b></center></td><td><center><b>Section</b></center></td><td><center><b>Total questions</b></center></td><td><center><b>Time</center></b></td><td><center><b>Action</b></center></td></tr>';
+                    <tr><td><center><b>S.No.</b></center></td><td><center><b>Section</b></center></td><td><center><b>Total questions</b></center></td><td><center><b>Total marks</b></center></td><td><center><b>Total Time</center></b></td><td><center><b>Action</b></center></td></tr>';
                     $c=1;
 
 				echo '<tr>
@@ -92,13 +111,16 @@
 				        <center>'."Online Assessment".'</center>
 				    </td>
 				    <td>
-				        <center>'."35".'</center>
+				        <center>'.$totques.'</center>
+				    </td>
+                    <td>
+				        <center>'.$tmarks.'</center>
 				    </td>
 				    <td>
-				        <center>'."30 minutes".'</center>
+				        <center>'.$thours.' hour '.$tmins.' minutes '.'</center>
 				    </td>
 				    <td>
-				        <center><b><a href="t1.php" onclick="popitup(this.href);window.open("", " _self", "" ).close();return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start New Test</b></span></a></b>&nbsp;<b><a href="resume_test.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Resume Test</b></span></a></b></center>
+				        <center><b><a href="t1.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start New Test</b></span></a></b>&nbsp;<b><a href="resume_test.php" onclick="popitup(this.href);return false;" class="btn sub1" style="color:white;margin:0px;background:#ea5e0d;><span class=" glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Resume Test</b></span></a></b></center>
 				    </td>
 				</tr>';
    ?>

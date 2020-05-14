@@ -8,46 +8,50 @@
     session_start();
 	
 
-	//if user is not logged in, forward to login page
-    // if(!(isset($_SESSION['U_Enrollment_No'])) || ($_SESSION['User']!="admin") )
-    // {
-    //    echo '<script>alert("You do not have the priviledge to reset the password! Please contact the admin!")</script>';
-    //     header("location:index.php");
-    // }
-    
+//	if user is not logged in, forward to login page
+	if(!(isset($_SESSION['U_Enrollment_No'])) || ($_SESSION['User']!="admin") )
+	{
+	echo '<script>alert("You do not have the priviledge to reset the password! Please contact the admin!");</script>';
+	header("location:index.php");
+	}
 	
             
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Add New Instructions</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    
+
     <!-- Font Awesome Offline -->
     <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
-        th,td{
+
+        th,
+        td {
             text-align: center;
         }
+
     </style>
 
 </head>
+
 <body>
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
@@ -62,10 +66,10 @@
                     <!-- <h1>Reset Password</h1> -->
 
                     <label for="value"><b>Enter Enrollment No/Employee ID of user:</b></label>
-                    <input type="text" class="form-control" placeholder="" id="enrollment_no" name="enrollment_no" value="<?php echo htmlspecialchars($_POST['enrollment_no'] ?? '', ENT_QUOTES); ?>" onfocusout="return validate_enrno(this.value)" required /><br />
+                    <input type="text" class="form-control" placeholder="" id="enrollment_no" name="enrollment_no" value="<?php echo htmlspecialchars($_POST['enrollment_no'] ?? '', ENT_QUOTES); ?>" onfocusout="" required /><br />
 
 
-                    <input type="submit" class="btn bg-orange text-white" name="find_user" value="FIND USER" />
+                    <input type="submit" class="btn bg-orange text-white" onclick="return validate_enrno()" name="find_user" value="FIND USER" />
                     <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
 
                 </div>
@@ -104,9 +108,9 @@
 
 
             <div style="" class="mb-5">
-                <table border="" id="search_result_table" style="width:100%;" >
+                <table border="" id="search_result_table" style="width:100%;">
 
-                    
+
 
                     <th>Enrollment No.</th>
                     <th>Name</th>
@@ -120,7 +124,7 @@
                        <td>Verbal Aptitude Marks</td>                   
 -->
                     <!--                       <td>Total Marks</td>                       -->
-                    
+
 
                     <?php
                 
@@ -145,28 +149,28 @@
 
         </div>
         <div class="container">
-        <!--    <form action="#" method="post">-->
-        <div class="row">
-            <!-- <div class="col-md-1"></div> -->
-            <div class="col-md-2"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
+            <!--    <form action="#" method="post">-->
+            <div class="row">
+                <!-- <div class="col-md-1"></div> -->
+                <div class="col-md-2"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-4">
+                    <input type="password" class="form-control" id="new_password" name="new_password" onfocusout="" />
+                </div>
+                <div class="col-6"></div>
             </div>
-            <div class="col-md-4">
-                <input type="password" class="form-control" id="new_password" name="new_password" onfocusout="return validate_new_password(this.value)" />
+            <br>
+            <div class="row">
+                <!-- <div class="col-md-1"></div> -->
+                <div class="col-md-2"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-4">
+                    <input type="password" class="form-control" id="retype_new_password" name="retype_new_password" onfocusout="" />
+                </div>
+                <div class="col-6"></div>
             </div>
-            <div class="col-6"></div>
-        </div>
-        <br>
-        <div class="row">
-            <!-- <div class="col-md-1"></div> -->
-            <div class="col-md-2"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
-            </div>
-            <div class="col-md-4">
-                <input type="password" class="form-control" id="retype_new_password" name="retype_new_password" onfocusout="return validate_retypenew_password(this.value)" />
-            </div>
-            <div class="col-6"></div>
-        </div>
-<br>
-        <input type="submit" class="btn bg-orange text-white" name="reset_password" id="reset_password" value="RESET PASSWORD" />
+            <br>
+            <input type="submit" class="btn bg-orange text-white" name="reset_password" id="reset_password" onclick="return validate_pwd()" value="RESET PASSWORD" />
         </div>
     </form>
     <footer class="mt-5">
@@ -176,143 +180,118 @@
     </footer>
 </body>
 <script>
-    var validating = false;
+    //validate enrollment_no
+    function validate_enrno() {
 
-    function validate_enrno(inputval) {
+
+        var inputval = document.getElementById('enrollment_no').value;
         var letters = /^[A-Za-z0-9]+$/;
         var isValid = letters.test(inputval);
         if (inputval == null || inputval == "" || inputval == " ") {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Enrollment no can't be blank");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
-            //            document.form1.rno.focus();
-            //            name.focus();
-            //            document.getElementById("enrollment_no").select();
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
         } else if (inputval.length < 8) {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Enrollment no must be at least 8 characters long.");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
         } else if (!isValid) {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Enrollment No can not contain Special Characters.");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
         }
         for (var i = 0, len = inputval.length; i < len; ++i) {
             if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+
                 alert('Enrollment no cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("enrollment_no").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("enrollment_no").focus();
+
                 return false;
             }
         }
     }
 
-    function validate_new_password(inputval) {
+    //validate password
+    function validate_pwd() {
+        var rno = document.getElementById('enrollment_no').value;
+        var inputval = document.getElementById('new_password').value;
+        var inputval2 = document.getElementById('retype_new_password').value;
+
         if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Password can't be blank");
-            setTimeout(function() {
-                document.getElementById("new_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("new_password").focus();
+
+            return false;
+        } else if (rno == "" || rno == null) {
+            alert("Enrollment no can't be blank");
+            document.getElementById("enrollment_no").focus();
             return false;
         } else if (inputval.length < 6) {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Password must be at least 6 characters long.");
-            setTimeout(function() {
-                document.getElementById("new_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("new_password").focus();
+
             return false;
         }
         for (var i = 0, len = inputval.length; i < len; ++i) {
             if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+
                 alert('Password cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("new_password").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("new_password").focus();
+
                 return false;
             }
         }
-    }
 
-    function validate_retypenew_password(inputval) {
-        var pwd = document.getElementById('new_password').value;
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
+        //validate retype password
+        if (inputval2 == null || inputval2 == "") {
+
             alert("Password can't be blank");
-            setTimeout(function() {
-                document.getElementById("retype_new_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("retype_new_password").focus();
+
             return false;
-        } else if (inputval.length < 6) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (inputval2.length < 6) {
+
             alert("Password must be at least 6 characters long.");
-            setTimeout(function() {
-                document.getElementById("retype_new_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("retype_new_password").focus();
+
             return false;
-        } else if (inputval != pwd) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (inputval2 != inputval) {
+
             alert("Confirm Password must be same as Password.");
-            setTimeout(function() {
-                document.getElementById("retype_new_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("retype_new_password").focus();
+
             return false;
         }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+        for (var i = 0, len = inputval2.length; i < len; ++i) {
+            if (inputval2.charAt(i) === ' ') {
+
                 alert('Password cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("retype_new_password").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("retype_new_password").focus();
+
                 return false;
             }
         }
+
+
     }
 
 </script>

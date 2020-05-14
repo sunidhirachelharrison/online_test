@@ -35,40 +35,43 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Add New Program</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    
+
     <!-- Font Awesome Offline -->
     <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 
 </head>
+
 <body>
 
-<div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
+    <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <a class="navbar-brand" href="#">Admin Panel - Add New Program</a></nav>
 
     <div class="container">
-        
+
         <!-- Page Coding Start -->
         <div class="" id="formModal">
             <div class="modal-dialog modal-lg pt-3 pb-3">
@@ -87,7 +90,7 @@
                                     <div class="col-1"></div>
                                     <label class="col-md-3">Program Name<span class="text-danger">*</span></label>
                                     <div class="col-md-7">
-                                        <input type="text" name="p_name" id="p_name" class="form-control" onfocusout="return validate_progname(this.value)" required />
+                                        <input type="text" name="p_name" id="p_name" class="form-control" onfocusout="" required />
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +98,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <input type="submit" name="p_submit" class="btn bg-orange text-white" value="Add" />
+                            <input type="submit" name="p_submit" onclick="return validate_progname()" class="btn bg-orange text-white" value="Add" />
                         </div>
                     </div>
                 </form>
@@ -103,10 +106,10 @@
         </div>
 
         <footer class="fixed-bottom">
-        <div class="text-center">
-            <p>Copyright &copy; Teerthanker Mahaveer University</p>
-        </div>
-    </footer>
+            <div class="text-center">
+                <p>Copyright &copy; Teerthanker Mahaveer University</p>
+            </div>
+        </footer>
 
 
     </div>
@@ -129,32 +132,25 @@
 
     </script>
     <script>
-        var validating = false;
+        function validate_progname() {
+            var inputval = document.getElementById('p_name').value;
 
-        function validate_progname(inputval) {
-            //            var inputval = trim(inputval);
             if (inputval == null || inputval == "" || inputval == " ") {
-                if (validating == false) {
-                    validating = true;
-                }
+
                 alert("Program name can't be blank!");
-                setTimeout(function() {
-                    document.getElementById("p_name").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("p_name").focus();
+
                 return false;
 
             }
             for (var i = 0, len = inputval.length; i < len - 1; ++i) {
                 if ((inputval.charAt(i) === ' ') && (inputval.charAt(i + 1) === ' ')) {
-                    if (validating == false) {
-                        validating = true;
-                    }
+
                     alert('Program name cannot have adjacent spaces!');
-                    setTimeout(function() {
-                        document.getElementById("p_name").focus();
-                        validating = false;
-                    }, 1);
+
+                    document.getElementById("p_name").focus();
+
                     return false;
                 }
             }

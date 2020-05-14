@@ -12,6 +12,7 @@
 
     include("DB_connect.php");  //for database connection
 
+
          
     $q_fetch_qids="SELECT * FROM state WHERE S_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
     $q_check=mysqli_query($con,$q_fetch_qids);
@@ -96,6 +97,9 @@
         $tname="";
         $tdate="";
         $tmarks="";
+        $thours="";
+        $tminutes="";
+        $tquestions="";
         if(!($r1))
         {
             //failed to fetch the test details to be displayed    
@@ -107,10 +111,41 @@
             $tname=$r2['T_Name'];
             $tdate=$r2['T_Date'];
             $tmarks=$r2['T_Marks'];
+            $thours=$r2['T_Hours'];
+            $tminutes=$r2['T_Minutes'];
+            $tquestions=$r2['T_Questions'];
             $obj=new DateTime($tdate);
             $tdate=date_format($obj,"d F Y");
         }
 //***********************************************************************************
+
+
+//select the program id and course id to fetch questions and store results course and program wise
+
+    $sq="SELECT * FROM program p join course c
+    ON c.C_Prog_ID=p.Prog_ID
+    WHERE p.Prog_Name='".$_SESSION['U_Program']."'";
+    $ro=mysqli_query($con,$sq);
+    $cid="";
+    $cname="";
+    $ccode="";
+    $proid="";
+    if(!($ro))
+    {
+        echo '<script>alert("Error in fetching program and course details!");</script>';
+    }
+    else
+    {
+        $ro_flag=mysqli_fetch_assoc($ro);
+        $cid=$ro_flag['C_ID'];
+        $cname=$ro_flag['C_Name'];
+        $ccode=$ro_flag['C_Code'];
+        $_SESSION['Course_Code']=$ccode;
+        $proid=$ro_flag['Prog_ID'];
+//        $_SESSION['U_Prog_ID']=$proid;
+ // $_SESSION['U_C_ID']=$cid;
+    }
+
 
 //********************************************************************************
     //fetching marked answers of questions in $qu array  and storing in local storage to retain the marked radio options
@@ -125,7 +160,7 @@
     {
 
         //----------------- fetching from result table --------------------------------
-        $sql_fetch_answers="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and R_Q_ID='".$id."' and R_T_ID='".$t_id."'";
+        $sql_fetch_answers="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and R_Q_ID='".$id."' and R_T_ID='".$t_id."' and R_C_ID='".$cid."'";
 
         $sql_check=mysqli_query($con,$sql_fetch_answers);
         if($sql_check)
@@ -141,7 +176,7 @@
         }
         
        //------------------- fetching from passage_result table ---------------------- 
-        $sql_fetch_passage_id="SELECT * FROM questions WHERE Q_ID='".$id."' and Q_Flag='0'";
+        $sql_fetch_passage_id="SELECT * FROM questions WHERE Q_ID='".$id."' and Q_Flag='0' and Q_Test_ID='".$t_id."' and Q_C_ID='".$cid."' and Q_Passage_ID is not null";
         $sql_pid_flag=mysqli_query($con,$sql_fetch_passage_id);
         if($sql_pid_flag)
         {
@@ -149,6 +184,7 @@
             $p_id=$sql_pid_row['Q_Passage_ID'];
             if($p_id)
             {
+                //fetching subquestions from passage_questions table
                 $sql_fetch_pass_qn_id="SELECT * FROM passage_questions WHERE PQ_AssociatedPassage_ID='".$p_id."'";
             
                 $sql_pqid_flag2=mysqli_query($con,$sql_fetch_pass_qn_id);
@@ -172,7 +208,7 @@
         //now fetching marked answers of passage sub-questions from passage_result table and storing these answers in $passage_answers array to be later on stored in local storage for state management
         foreach($passage_ans_id as $paid)
         {
-            $sql_fetch_passage_answers="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."' and PR_PQ_ID='".$paid."'";
+            $sql_fetch_passage_answers="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' and PR_T_ID='".$t_id."' and PR_PQ_ID='".$paid."' and PR_C_ID='".$cid."'";
             $pans_flag=mysqli_query($con,$sql_fetch_passage_answers);
             if($pans_flag)
             {
@@ -195,24 +231,24 @@
 //***************** fetching course name ********************************************
 
 
-    $query2="SELECT * FROM course WHERE C_Flag='1' and C_Prog_ID='1'";
-        $r2=mysqli_query($con,$query2);
-        $c_id="";
-        $c_name="";
-        $c_code="";
-        
-        if(!($r2))
-        {
-            //failed to fetch the test details to be displayed    
-        }
-        else
-        {
-            $r3=mysqli_fetch_assoc($r2);
-            $c_id=$r3['C_ID'];
-            $c_name=$r3['C_Name'];
-            $c_code=$r3['C_Code'];
-           
-        }
+//    $query2="SELECT * FROM course WHERE C_Flag='1' and C_Prog_ID='1'";
+//        $r2=mysqli_query($con,$query2);
+//        $c_id="";
+//        $c_name="";
+//        $c_code="";
+//        
+//        if(!($r2))
+//        {
+//            //failed to fetch the test details to be displayed    
+//        }
+//        else
+//        {
+//            $r3=mysqli_fetch_assoc($r2);
+//            $c_id=$r3['C_ID'];
+//            $c_name=$r3['C_Name'];
+//            $c_code=$r3['C_Code'];
+//           
+//        }
 
 //***********************************************************************************
 
@@ -313,6 +349,7 @@
     <script type="text/javascript">
         window.counter = 0;
         var selected_qid = <?php echo json_encode($qu); ?>;
+        var tquestions = <?php echo json_encode($tquestions); ?>;
         showQuestion(selected_qid[counter]);
 
         //to show next question:increment the counter
@@ -343,11 +380,11 @@
 
             //**************************************************************
             counter = counter + 1;
-            if ((counter == 0) || (counter < 34)) //replace 5 by 34 to fetch 35 questions
+            if ((counter == 0) || (counter < (tquestions - 1))) //replace tquestions by (tquestions-1) to fetch tquestions questions
             {
                 showQuestion(selected_qid[counter], counter);
 
-            } else if (window.counter == 34) //replace 5 by 34 to fetch 35 questions
+            } else if (window.counter == (tquestions - 1)) //replace 5 by 34 to fetch 35 questions
             {
                 //displays last question
                 showQuestion(selected_qid[counter], window.counter);
@@ -587,10 +624,11 @@
     <script>
         //script to put fetched answers(from db) in local storage to retain marked radio options
 
-
+        //fetched_answers are of questions and fetched_passage_answers are of passage_questions
         var fetched_answers = <?php echo json_encode($fetched_answers); ?>;
         var fetched_passage_answers = <?php echo json_encode($passage_ans); ?>;
 
+        //storing both fetched_answers and fetched_passage_answers in local storage
         fetched_answers.forEach(store_it_in_local);
 
         function store_it_in_local(item, index) {
@@ -622,7 +660,7 @@
     </script>
 </head>
 
-<body>
+<body onselectstart="return false" onkeydown="if ((arguments[0] || window.event).ctrlKey) return false">
 
     <!-- TMU Logo with Header -->
     <div class="jumbotron" style="margin-bottom:0; padding: 1rem 1rem;">
@@ -631,10 +669,10 @@
                 <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
             </div>
             <div class="col-12 col-lg-4 align-self-center"><br>
-                <div class="text-center"><b><?php echo $tname . "<br/>". $c_name . "("  . $c_code . ")<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
+                <div class="text-center"><b><?php echo $tname . "<br/>". $cname . "("  . $ccode . ")<br/>" . $tdate . "<br/>" . "Total marks: " . $tmarks . "<br/>"; ?></b></div>
             </div>
             <div class="col-12 col-lg-4 text-center align-self-end"><br>
-                <div class=""><b><?php include("timer1.php"); ?></b></div>
+                <div class=""><b><?php include("complex_timer2.php"); ?></b></div>
             </div>
         </div>
     </div>
@@ -674,10 +712,10 @@
                             <div class="container">
                                 <div class="row">
                                     <?php 
-                    for($z=1;$z<=35;$z++)
+                    for($z=1;$z<=$tquestions;$z++)
                     {
                 ?>
-                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==35){
+                                    <div class="col-xl-2 col-2 p-2"><Button type="button" id="<?php echo ($z-1); ?>" class="btn btn-info clip" onclick="<?php if($z==$tquestions){
                 ?>
                 document.getElementById('submit').style.visibility = 'visible';
         
@@ -739,7 +777,7 @@
         var radios = document.getElementsByName('options');
         //var x="radio_marked"+window.counter;
         //alert(x);
-        var c_id = <?php echo json_encode($c_id); ?>;
+        var c_id = <?php echo json_encode($cid); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -795,7 +833,8 @@
         var radios = document.getElementsByName(m);
         //var x="radio_marked"+window.counter;
         //alert(x);
-        var c_id = <?php echo json_encode($c_id); ?>;
+        var c_id = <?php echo json_encode($cid); ?>;
+        var t_id = <?php echo json_encode($t_id); ?>;
 
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
@@ -811,6 +850,7 @@
             'qid': qid,
             'reid': reid,
             'c_id': c_id,
+            't_id': t_id,
         };
         //alert(pass_data);
         $.ajax({
@@ -898,12 +938,22 @@
 
 </script>
 
+<script type="text/javascript">
+    //script to disable F5 for page refresh
+    function disableF5(e) {
+        if ((e.which || e.keyCode) == 116 || (e.which || e.keyCode) == 82) e.preventDefault();
+    };
 
-<!--
+    $(document).ready(function() {
+        $(document).on("keydown", disableF5);
+    });
+
+</script>
 <script>
     setInterval(function() {
-        var rollno = <?php //echo json_encode($_SESSION['U_Enrollment_No']); ?>;
+        var rollno = <?php echo json_encode($_SESSION['U_Enrollment_No']); ?>;
         var pass_data = {
+            'hours': hours,
             'mins': minutes,
             'secs': seconds,
             'rollno': rollno,
@@ -917,7 +967,6 @@
         });
         //        return false;
 
-    }, 1000);
+    }, 30000);
 
 </script>
--->

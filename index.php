@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="image/tmu.png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
-    <title>| Online Test (CTLD) |</title>
+    <title>| Online Assessment - FoECS |</title>
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -110,7 +110,7 @@
     </nav>
     <center>
         <div class="intro pt-5">
-            <h1>Online Test (CTLD)</h1>
+            <h1>Online Test</h1>
             <a href="Log_in.php" class="btn"> login </a> &emsp;
             <a href="Registration.php" class="btn"> register </a>
             <h2 class="goodluck"> Good &nbsp;Luck. </h2>

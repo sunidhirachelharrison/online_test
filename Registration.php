@@ -145,10 +145,10 @@
                     <input type="text" class="form-control" name="id" disabled/><br/>
 -->
                             <label for="enrollmentno"><b>Enrollment No.:</b></label>
-                            <input type="text" class="form-control" id="enrollment_no" name="enrollment_no" onfocusout="return validate_rno(this.value)" required /><br />
+                            <input type="text" class="form-control" id="enrollment_no" name="enrollment_no" onfocusout="" required /><br />
 
                             <label for="name"><b>Full Name:</b></label>
-                            <input type="text" class="form-control" name="name" onfocusout="return validate_name(this.value)" id="name" required /><br />
+                            <input type="text" class="form-control" name="name" onfocusout="" id="name" required /><br />
 
                             <label for="program"><b>Program:</b></label>
                             <select name="program" id="" class="form-control">
@@ -195,15 +195,17 @@
                             <label for="branch"><b>Branch:</b></label>
                             <select name="branch" id="" class="form-control">
                                 <option value="none">None</option>
-                                <option value="CS">CS</option>
+                                <option value="CS">Computer Science Engineering</option>
+                                <option value="CS">Computer Applications</option>
                                 <option value="Animation">Animation</option>
-                                <option value="Mechanical">Mechanical</option>
-                                <option value="Civil">Civil</option>
-                                <option value="EE">EE</option>
-                                <option value="EC">EC</option>
+                                <option value="Mechanical">Mechanical Engineering</option>
+                                <option value="Civil">Civil Engineering</option>
+                                <option value="EE">EEE</option>
+                                <option value="EC">ECE</option>
                                 <option value="AI">AI</option>
-                                <option value="IBM">IBM - </option>
-                                <option value="iNurture">iNurture - Cloud</option>
+                                <option value="IBM">IBM - Cloud Computing </option>
+                                <option value="IBM">IBM - Data Analytics </option>
+                                <option value="iNurture">iNurture - Cloud Computing</option>
                             </select><br />
 
                             <!--
@@ -262,20 +264,20 @@
 -->
 
                             <label for="mobile_no"><b>Mobile_No.:</b></label>
-                            <input type="number" class="form-control" placeholder="" name="mobile_no" id="mobile_no" onfocusout="return validate_mobno(this.value)" required /><br />
+                            <input type="number" class="form-control" placeholder="" name="mobile_no" id="mobile_no" onfocusout="" required /><br />
 
                             <label for="email_id"><b>Email ID:</b></label>
-                            <input type="email" placeholder="" class="form-control" name="email_id" id="email_id" onfocusout="return validate_emailId(this.value)" required /><br />
+                            <input type="email" placeholder="" class="form-control" name="email_id" id="email_id" onfocusout="" required /><br />
 
                             <label for="imageUpload"><b>Image:</b></label>
                             <input type="file" name="imageUpload" id="imageUpload" class="form-control" />
                             <!--                   <button name="uploadbtn">UPLOAD IMAGE</button><br/>-->
 
                             <label for="password"><b>Password:</b></label>
-                            <input type="password" class="form-control" id="password" name="password" onfocusout="return validate_password(this.value)" required /><br />
+                            <input type="password" class="form-control" id="password" name="password" onfocusout="" required /><br />
 
                             <label for="confirm_password"><b>Confirm Password:</b></label>
-                            <input type="password" class="form-control" name="confirm_password" onfocusout="return validate_con_password(this.value)" id="confirm_password" required /><br />
+                            <input type="password" class="form-control" name="confirm_password" onfocusout="" id="confirm_password" required /><br />
 
 
                             <!--                    <label for="reg_date"><b>Registration Date:</b></label>-->
@@ -287,7 +289,7 @@
                         date_default_timezone_set('Asia/Kolkata');             $dt2=date("H:i:s"); ?>
                             <input type="text" class="form-control" id="reg_date" name="reg_time" value="<?php echo $dt2; ?>" hidden /><br />
 
-                            <input type="submit" class="btn aa" name="submit" value="REGISTER" />
+                            <input type="submit" onclick="return validate_fields()" class="btn aa" name="submit" value="REGISTER" />
 
                             <button type="button" class="btn aa" name="log_in" onClick="window.location = 'Log_in.php'">LOG IN</button>
 
@@ -352,273 +354,186 @@
         </div>
     </form>
 </body>
-<!--
-<script>
-    function ValidateEmail(inputText) {
-        var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (inputText.value.match(mailformat)) {
-            //document.form1.text1.focus();
-            return true;
-        } else {
-            alert("You have entered an invalid email address!");
-            //document.form1.text1.focus();
-            return false;
-        }
-    }
-</script>
--->
-<script>
-    //    function validateform() {
-    //        var name = document.myform.name.value;
-    //        var password = document.myform.password.value;
-    //        var confirm_password = document.myform.confirm_password.value;
-    //
-    //        if (name == null || name == "") {
-    //            alert("Name can't be blank");
-    //            return false;
-    //        } else if ((password.length < 6) || (confirm_password.length < 6)) {
-    //            alert("Password must be at least 6 characters long.");
-    //            return false;
-    //        } else if (password != confirm_password) {
-    //            alert("Confirm Password must be same as Password ");
-    //            return false;
-    //        }
-    //    }
-    var validating = false;
 
-    function validate_rno(rno) {
+
+<script>
+    function validate_fields() {
+        var enrollment_no = document.getElementById("enrollment_no").value;
+        var name = document.getElementById("name").value;
+        var mobile_no = document.getElementById("mobile_no").value;
+        var email_id = document.getElementById("email_id").value;
+        var password = document.getElementById("password").value;
+        var confirm_password = document.getElementById("confirm_password").value;
+
+        //validating enrollment_no
         var letters = /^[A-Za-z0-9]+$/;
-        var isValid = letters.test(rno);
-        if (rno == null || rno == "") {
-            if (validating == false) {
-                validating = true;
-            }
+        var isValid = letters.test(enrollment_no);
+        if (enrollment_no == null || enrollment_no == "") {
             alert("Enrollment no can't be blank");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
-            //            document.form1.rno.focus();
-            //            name.focus();
-            //            document.getElementById("enrollment_no").select();
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
-        } else if (rno.length < 8) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (enrollment_no.length < 8) {
+
             alert("Enrollment no must be at least 8 characters long.");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
         } else if (!isValid) {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("Enrollment No can not contain Special Characters.");
-            setTimeout(function() {
-                document.getElementById("enrollment_no").focus();
-                validating = false;
-            }, 1);
+
+            alert("Enrollment No can not contain Special Characters or spaces.");
+
+            document.getElementById("enrollment_no").focus();
+
             return false;
         }
-        for (var i = 0, len = rno.length; i < len; ++i) {
-            if (rno.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+        for (var i = 0, len = enrollment_no.length; i < len; ++i) {
+            if (enrollment_no.charAt(i) === ' ') {
+
                 alert('Enrollment no cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("enrollment_no").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("enrollment_no").focus();
+
                 return false;
             }
         }
-    }
 
-    function validate_name(name) {
-        var letters = /^[A-Za-z ]+$/;
-        var isValid = letters.test(name);
+        //validating name
+        var letters2 = /^[A-Za-z ]+$/;
+        var isValid2 = letters2.test(name);
         if (name == null || name == "") {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Name can't be blank");
-            setTimeout(function() {
-                document.getElementById("name").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("name").focus();
+
             return false;
         } else if (name.length < 3) {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Name must be at least 3 characters long.");
-            setTimeout(function() {
-                document.getElementById("name").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("name").focus();
+
             return false;
-        } else if (!isValid) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (!isValid2) {
+
             alert("Name can not contain Special Characters and numbers.");
-            setTimeout(function() {
-                document.getElementById("name").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("name").focus();
+
             return false;
         }
-    }
 
-    function validate_mobno(inputval) {
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
+
+        //validating mobile_no
+        if (mobile_no == null || mobile_no == "") {
+
             alert("Mobile no can't be blank");
-            setTimeout(function() {
-                document.getElementById("mobile_no").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("mobile_no").focus();
+
             return false;
-        } else if (inputval.length != 10) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (mobile_no.length != 10) {
+
             alert("Mobile no must be of 10 characters long.");
-            setTimeout(function() {
-                document.getElementById("mobile_no").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("mobile_no").focus();
+
             return false;
         }
 
-    }
+        //validating emailID
+        var letters3 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        var isValid3 = letters3.test(email_id);
+        if (email_id == null || email_id == "") {
 
-    function validate_emailId(inputval) {
-        var letters = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        var isValid = letters.test(inputval);
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
             alert("Email ID can't be blank");
-            setTimeout(function() {
-                document.getElementById("email_id").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("email_id").focus();
+
             return false;
-        } else if (inputval.length < 5) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (email_id.length < 5) {
+
             alert("Invalid email ID.");
-            setTimeout(function() {
-                document.getElementById("email_id").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("email_id").focus();
+
             return false;
-        } else if (!isValid) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (!isValid3) {
+
             alert("Email ID is invalid.");
-            setTimeout(function() {
-                document.getElementById("email_id").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("email_id").focus();
+
             return false;
         }
 
-    }
+        //validating password
+        if (password == null || password == "") {
 
-    function validate_password(inputval) {
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
             alert("Password can't be blank");
-            setTimeout(function() {
-                document.getElementById("password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("password").focus();
+
             return false;
-        } else if (inputval.length < 6) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (password.length < 6) {
+
             alert("Password must be at least 6 characters long.");
-            setTimeout(function() {
-                document.getElementById("password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("password").focus();
+
             return false;
         }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+        for (var i = 0, len = password.length; i < len; ++i) {
+            if (password.charAt(i) === ' ') {
+
                 alert('Password cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("password").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("password").focus();
+
                 return false;
             }
         }
-    }
 
-    function validate_con_password(inputval) {
-        var pwd = document.getElementById('password').value;
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
+
+        //validate confirm password
+        if (confirm_password == null || confirm_password == "") {
+
             alert("Password can't be blank");
-            setTimeout(function() {
-                document.getElementById("confirm_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("confirm_password").focus();
+
             return false;
-        } else if (inputval.length < 6) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (confirm_password.length < 6) {
+
             alert("Password must be at least 6 characters long.");
-            setTimeout(function() {
-                document.getElementById("confirm_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("confirm_password").focus();
+
             return false;
-        } else if (inputval != pwd) {
-            if (validating == false) {
-                validating = true;
-            }
+        } else if (confirm_password != password) {
+
             alert("Confirm Password must be same as Password.");
-            setTimeout(function() {
-                document.getElementById("confirm_password").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("confirm_password").focus();
+
             return false;
         }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
+        for (var i = 0, len = confirm_password.length; i < len; ++i) {
+            if (confirm_password.charAt(i) === ' ') {
+
                 alert('Password cannot have spaces!');
-                setTimeout(function() {
-                    document.getElementById("confirm_password").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("confirm_password").focus();
+
                 return false;
             }
         }
+
+
+
     }
 
 </script>

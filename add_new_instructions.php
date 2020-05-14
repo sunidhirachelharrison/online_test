@@ -29,30 +29,33 @@ if(isset($_POST['add']))
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Add New Instructions</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    
+
     <!-- Font Awesome Offline -->
     <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 
 </head>
+
 <body>
 
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
@@ -60,7 +63,7 @@ if(isset($_POST['add']))
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <a class="navbar-brand" href="#">Admin Panel - Add New Instructions</a></nav>
-<!--     
+    <!--     
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -86,11 +89,11 @@ if(isset($_POST['add']))
     </div> -->
 
     <div class="container">
-        
+
         <!-- Page Coding Start -->
         <div class="" id="formModal">
             <div class="modal-dialog modal-lg pt-3 pb-3">
-            <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
@@ -105,7 +108,7 @@ if(isset($_POST['add']))
                                     <div class="col-1"></div>
                                     <label class="col-md-2">Description:<span class="text-danger">*</span></label>
                                     <div class="col-md-9">
-                                    <input type="textarea" class="form-control" name="description" id="description" onfocusout="return validate_instruction(this.value)" required />
+                                        <input type="textarea" class="form-control" name="description" id="description" onfocusout="" required />
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +116,7 @@ if(isset($_POST['add']))
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <input type="submit" name="add" id="add" class="btn bg-orange text-white" value="Add" />
+                            <input type="submit" name="add" id="add" onclick="return validate_instruction()" class="btn bg-orange text-white" value="Add" />
                         </div>
                     </div>
                 </form>
@@ -121,11 +124,11 @@ if(isset($_POST['add']))
         </div>
 
 
-    <footer class="fixed-bottom">
-        <div class="text-center">
-            <p>Copyright &copy; Teerthanker Mahaveer University</p>
-        </div>
-    </footer>
+        <footer class="fixed-bottom">
+            <div class="text-center">
+                <p>Copyright &copy; Teerthanker Mahaveer University</p>
+            </div>
+        </footer>
 
     </div>
 
@@ -140,30 +143,25 @@ if(isset($_POST['add']))
     //
     //   d.innerHTML += "<br />Question: <input type='text' class='form-control'/><br/>Option A: <input type='text' class='form-control' style='width:150px'/>Option B: <input type='text' class='form-control' style='width:150px'/>Image with option A(if any): <input type='file' class='form-control'/><br/>&nbsp;Image with option B(if any): <input type='file' class='form-control'/><br/>Option C: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option C(if any): <input type='file' class='form-control'/><br/>Option D: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option D(if any): <input type='file' class='form-control'/><br/>Option E: <input type='text' class='form-control' style='width:100px'/>&nbsp;Image with option E(if any): <input type='file' class='form-control'/><br/>";
     //}
-    var validating = false;
+    //    var validating = false;
 
-    function validate_instruction(inputval) {
+    function validate_instruction() {
+        var inputval = document.getElementById('description').value;
         if (inputval == null || inputval == "" || inputval == " ") {
-            if (validating == false) {
-                validating = true;
-            }
+
             alert("Instruction can't be blank");
-            setTimeout(function() {
-                document.getElementById("description").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("description").focus();
+
             return false;
         }
         for (var i = 0, len = inputval.length; i < len - 1; ++i) {
             if ((inputval.charAt(i) === ' ') && (inputval.charAt(i + 1) === ' ')) {
-                if (validating == false) {
-                    validating = true;
-                }
+
                 alert('Instruction cannot have adjacent spaces!');
-                setTimeout(function() {
-                    document.getElementById("description").focus();
-                    validating = false;
-                }, 1);
+
+                document.getElementById("description").focus();
+
                 return false;
             }
         }

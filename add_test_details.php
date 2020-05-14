@@ -18,7 +18,7 @@
 
 	if(isset($_REQUEST['t_submit']))
 	{
-		if(($_REQUEST['t_title'] == "") || ($_REQUEST['t_date'] == "") || ($_REQUEST['t_time_shiftA'] == "") && ($_REQUEST['t_time_shiftB'] == "") && ($_REQUEST['t_time_shiftC'] == "")||($_REQUEST['t_marks'] == ""))
+		if(($_REQUEST['t_title'] == "") || ($_REQUEST['t_date'] == "") ||($_REQUEST['t_ques'] == "")||($_REQUEST['t_marks'] == "") || ($_REQUEST['t_hours'] == "") || ($_REQUEST['t_minutes'] == "")||(($_REQUEST['t_time_shiftA'] == "") && ($_REQUEST['t_time_shiftB'] == "") && ($_REQUEST['t_time_shiftC'] == "")))
 		{
 			echo '<script>alert("Enter Test Fields!");</script>';
 		}
@@ -41,9 +41,14 @@
 			{
 				$time_shiftC="null";
 			}
+            $t_ques= $_REQUEST['t_ques'];
             $t_marks= $_REQUEST['t_marks'];
+            $t_hours= $_REQUEST['t_hours'];
+            $t_minutes= $_REQUEST['t_minutes'];
+            
 			
-			$sql = "INSERT INTO `test` (`T_Name`,`T_Date`,`T_Time_ShiftA`,`T_Time_ShiftB`,`T_Time_ShiftC`,`T_Marks`,`T_Flag`) VALUES ('$title','$date','$time_shiftA','$time_shiftB','$time_shiftC','$t_marks',null)";
+            //insert test details in test table
+			$sql = "INSERT INTO `test` (`T_Name`,`T_Date`,`T_Time_ShiftA`,`T_Time_ShiftB`,`T_Time_ShiftC`,`T_Marks`,`T_Flag`,`T_Hours`,`T_Minutes`,`T_Questions`) VALUES ('$title','$date','$time_shiftA','$time_shiftB','$time_shiftC','$t_marks',null,'$t_hours','$t_minutes','$t_ques')";
 			if(mysqli_query($con,$sql))
 			{
 				echo "<script>alert('New Test Details Inserted Successfully!');</script>";
@@ -53,23 +58,26 @@
                 echo "<script>alert('Unable to insert test details!');</script>";
 				
 			}
+               
 		}
+        
 	}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Add New Course</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
@@ -77,12 +85,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 
 </head>
+
 <body>
 
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
@@ -90,9 +100,9 @@
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <a class="navbar-brand" href="#">Admin Panel - Add New Course</a></nav>
-<div class="container">
-                <!-- Page Coding Start -->
-                <div class="" id="">
+    <div class="container">
+        <!-- Page Coding Start -->
+        <div class="" id="">
             <div class="modal-dialog modal-lg mt-4 mb-4">
                 <form method="post" id="exam_form">
                     <div class="modal-content">
@@ -109,7 +119,7 @@
                                     <div class="col-1"></div>
                                     <label class="col-md-2">Test Title <span class="text-danger">*</span></label>
                                     <div class="col-md-8">
-                                    <input type="text" class="form-control" name="t_title" id="t_title" onfocusout="return validate_t_title(this.value)" required />
+                                        <input type="text" class="form-control" name="t_title" id="t_title" onfocusout="" required />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
@@ -119,47 +129,69 @@
                                     <div class="col-1"></div>
                                     <label class="col-md-2"><span class="">Test Date<span class="text-danger">*</span></span></label>
                                     <div class="col-md-8">
-                                    <input type="date" class="form-control" name="t_date" id="t_date" required />
+                                        <input type="date" class="form-control" name="t_date" id="t_date" required />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                <div class="col-1"></div>
+                                    <div class="col-1"></div>
                                     <label class="col-md-2">Test Time (Shift A)<span class="text-danger">*</span></label>
                                     <div class="col-md-8">
-                                    <input type="time" class="form-control" name="t_time_shiftA" id="t_time_shiftA" required />
+                                        <input type="time" class="form-control" name="t_time_shiftA" id="t_time_shiftA" required />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                <div class="col-1"></div>
+                                    <div class="col-1"></div>
                                     <label class="col-md-2">Test Time (Shift B)<span class="text-danger">*</span></label>
                                     <div class="col-md-8">
-                                    <input type="time" class="form-control" name="t_time_shiftB" id="t_time_shiftB" />
+                                        <input type="time" class="form-control" name="t_time_shiftB" id="t_time_shiftB" />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                <div class="col-1"></div>
+                                    <div class="col-1"></div>
                                     <label class="col-md-2">Test Time (Shift C)<span class="text-danger">*</span></label>
                                     <div class="col-md-8">
-                                    <input type="time" class="form-control" name="t_time_shiftC" id="t_time_shiftC" />
+                                        <input type="time" class="form-control" name="t_time_shiftC" id="t_time_shiftC" />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                <div class="col-1"></div>
+                                    <div class="col-1"></div>
+                                    <label class="col-md-2">Total Questions<span class="text-danger">*</span></label>
+                                    <div class="col-md-8">
+                                        <input type="number" class="form-control" name="t_ques" id="t_ques" onfocusout="" required />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-1"></div>
                                     <label class="col-md-2">Total Marks<span class="text-danger">*</span></label>
                                     <div class="col-md-8">
-                                    <input type="number" class="form-control" name="t_marks" id="t_marks" onfocusout="return validate_t_marks(this.value)" required />
+                                        <input type="number" class="form-control" name="t_marks" id="t_marks" onfocusout="" required />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <label class="col-md-2">Total Time<span class="text-danger">*</span></label>
+                                    <div class="col-md-2">
+                                        Hours<input type="number" class="form-control" name="t_hours" id="t_hours" onfocusout="" required />
+                                        Minutes<input type="number" class="form-control" name="t_minutes" id="t_minutes" onfocusout="" required />
                                     </div>
                                     <div class="col-1"></div>
                                 </div>
@@ -169,7 +201,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <input type="submit" id="add" name="t_submit" class="btn bg-orange text-white" value="Add" />
+                            <input type="submit" id="add" name="t_submit" class="btn bg-orange text-white" value="Add" onclick="return validate_fields()" />
                         </div>
                     </div>
                 </form>
@@ -177,13 +209,13 @@
         </div>
 
 
-        </div>
+    </div>
 
 
 
 
 
-<!-- 
+    <!-- 
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -235,6 +267,7 @@
     <script src="js/bootstrap.min.js"></script>
 
 </body>
+
 </html>
 
 <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -243,51 +276,65 @@
 
 
 <script>
-    //validation scripts
-    var validating = false;
+    function validate_fields() {
+        var t_title = document.getElementById('t_title').value;
+        var t_marks = document.getElementById('t_marks').value;
+        var t_ques = document.getElementById('t_ques').value;
+        var t_hours = document.getElementById('t_hours').value;
+        var t_minutes = document.getElementById('t_minutes').value;
 
-    function validate_t_title(inputval) {
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
+        //validate title
+        if (t_title == null || t_title == "") {
+
             alert("Test Title can't be blank");
-            setTimeout(function() {
-                document.getElementById("t_title").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("t_title").focus();
+
             return false;
         }
-    }
 
-    function validate_t_date(inputval) {
+        //validate questions
+        if (t_ques == null || t_ques == "") {
 
-    }
+            alert("Total Questions can't be blank");
 
-    function validate_t_time_shiftA(inputval) {
+            document.getElementById("t_ques").focus();
 
-    }
+            return false;
+        }
 
-    function validate_t_time_shiftB(inputval) {
+        //validate marks
+        if (t_marks == null || t_marks == "") {
 
-    }
-
-    function validate_t_time_shiftC(inputval) {
-
-    }
-
-    function validate_t_marks(inputval) {
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
             alert("Total Marks can't be blank");
-            setTimeout(function() {
-                document.getElementById("t_marks").focus();
-                validating = false;
-            }, 1);
+
+            document.getElementById("t_marks").focus();
+
             return false;
         }
+
+        //validate hours
+        if (t_hours == null || t_hours == "") {
+
+            alert("Hours can't be blank");
+
+            document.getElementById("t_hours").focus();
+
+            return false;
+        }
+
+        //validate minutes
+        if (t_minutes == null || t_minutes == "") {
+
+            alert("Minutes can't be blank");
+
+            document.getElementById("t_minutes").focus();
+
+            return false;
+        }
+
+
+
     }
 
 </script>

@@ -95,36 +95,197 @@ if(isset($_POST['submit']))
                           
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
     <title>Add Passage Type Questions</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
-        }
-
     </style>
-</head>
 
+</head>
 <body>
 
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
+        <a class="navbar-brand" href="#">Admin Panel - Add Passage Type Questions</a></nav>
+    
+        <div class="container">
+                <!-- Page Coding Start -->
+                <div class="" id="">
+            <div class="modal-dialog modal-lg mt-4 mb-4">
+                <form method="post" id="exam_form">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal_title">Add Passage</h4>
+                            <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <label class="col-md-3">Question Description: <span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="description" id="description" required />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <label class="col-md-3"><span class="">Sub-point A(if any):</span></label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="subpointA" id="subpointA" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Sub-point B(if any): </label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="subpointB" id="subpointB" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Sub-point C(if any):</label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="subpointC" id="subpointC" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Sub-point D(if any):</label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="subpointD" id="subpointD" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Sub-point E(if any):</label>
+                                    <div class="col-md-7">
+                                    <input type="textarea" class="form-control" name="subpointE" id="subpointE" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Image(if any):</label>
+                                    <div class="col-md-7">
+                                    <input type="file" name="p_image" id="p_image" class="form-control" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Marks Alloted:<span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" name="marks" id="marks" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Question Level:<span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" name="level" id="level" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Question Category:<span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" name="type" id="type" />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Program Name:<span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" name="prog_name" id="prog_name" required/>
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-1"></div>
+                                    <label class="col-md-3">Course Code:<span class="text-danger">*</span></label>
+                                    <div class="col-md-7">
+                                    <input type="text" class="form-control" name="course_code" id="course_code" required />
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <input type="submit" id="submit" name="submit" class="btn bg-orange text-white" value="Submit" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        </div>
+
+        <footer class="mt-5">
+        <div class="text-center">
+            <p>Copyright &copy; Teerthanker Mahaveer University</p>
+        </div>
+    </footer>
+
+<!-- 
+    
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -165,14 +326,14 @@ if(isset($_POST['submit']))
                     <input type="text" class="form-control" name="type" id="type" /><br />
 
                     <label for="prog_name"><b>Program Name:</b></label>
-                    <input type="text" class="form-control" name="prog_name" id="prog_name" /><br required />
+                    <input type="text" class="form-control" name="prog_name" id="prog_name" required/><br  />
 
                     <label for="course_code"><b>Course Code:</b></label>
                     <input type="text" class="form-control" name="course_code" id="course_code" required /><br />
 
                     <input type="submit" class="btn btn-danger mt-3" name="submit" value="SUBMIT" id="submit" />
 
-                </div>
+                </div> -->
 
                 <!--
                 <div class="col-sm-6 p-4" style="background:#e9ecef">
@@ -195,12 +356,12 @@ if(isset($_POST['submit']))
                     
                 </div>
 -->
-
+<!-- 
             </div>
 
         </form>
 
-    </div>
+    </div> -->
 
 </body>
 

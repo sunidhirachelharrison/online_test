@@ -185,7 +185,7 @@
                     $ccode=$result_2['C_Code'];
                     $cid=$result_2['C_ID'];
                 ?>
-                                        <option value="<?php echo $cid; ?>"><?php echo $cname; ?></option>
+                                        <option value="<?php echo $cid; ?>"><?php echo $cname ." ( ".$ccode." )"; ?></option>
 
                                         <?php  } ?>
                                     </select><br />

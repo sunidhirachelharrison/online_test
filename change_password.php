@@ -56,17 +56,18 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Change Password</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/loginstyle.css">
 
@@ -75,12 +76,14 @@ session_start();
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 
 </head>
+
 <body>
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
@@ -93,56 +96,56 @@ session_start();
 
     <!-- Modal Page Coding Start -->
     <div class="" id="formModal">
-                <div class="modal-dialog modal-lg mt-5">
+        <div class="modal-dialog modal-lg mt-5">
 
-                    <form method="post" id="exam_form">
-                        <div class="modal-content">
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="modal_title">Change Password</h4>
-                                <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
-                            </div>
+            <form method="post" id="exam_form">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modal_title">Change Password</h4>
+                        <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                    </div>
 
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-3"><label class="text-right font-weight-bold">Current Password<span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-md-8">
-                                        <input type="password" class="form-control" id="current_password" name="current_password" onfocusout="return validate_current_password(this.value)" required />
-                                        </div>
-                                    </div><br>
-                                    <div class="row">
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-3"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-md-8">
-                                        <input type="password" class="form-control" id="new_password" name="new_password" onfocusout="return validate_new_password(this.value)" required />
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-3"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
-                                        </div>
-                                        <div class="col-md-8">
-                                        <input type="password" class="form-control" id="retype_new_password" name="retype_new_password" onfocusout="return validate_retypenew_password(this.value)" required />
-                                        </div>
-                                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3"><label class="text-right font-weight-bold">Current Password<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="password" class="form-control" id="current_password" name="current_password" onfocusout="" required />
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3"><label class="text-right font-weight-bold">New Password<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="password" class="form-control" id="new_password" name="new_password" onfocusout="" required />
                                 </div>
                             </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <input type="submit" name="change_pwd" class="btn bg-orange text-white" value="Change Password"/>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3"><label class="text-right font-weight-bold">Retype Password<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="password" class="form-control" id="retype_new_password" name="retype_new_password" onfocusout="" required />
+                                </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <input type="submit" id="change_pwd" name="change_pwd" class="btn bg-orange text-white" value="Change Password" onclick="return validate_pwd()" />
+                    </div>
                 </div>
-            </div>
-            <!-- Modal Page End -->
+            </form>
+        </div>
+    </div>
+    <!-- Modal Page End -->
 
     <!-- <form action="#" method="post">
 
@@ -173,113 +176,89 @@ session_start();
         </div>
 
     </form> -->
-</body>
-<script>
-    var validating = false;
 
-    function validate_current_password(inputval) {
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("Invalid current password!Empty or null value not allowed!");
-            setTimeout(function() {
+    <script>
+        function validate_pwd() {
+            var current_password = document.getElementById('current_password').value;
+            var new_password = document.getElementById('new_password').value;
+            var retype_new_password = document.getElementById('retype_new_password').value;
+            //alert(current_password);
+
+            //validate current password
+            if (current_password == null || current_password == "") {
+                alert("Invalid current password!Empty or null value not allowed!");
                 document.getElementById("current_password").focus();
-                validating = false;
-            }, 1);
-            return false;
-        }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
-                alert("Invalid current password!Spaces are not allowed!");
-                setTimeout(function() {
+                return false;
+            }
+            for (var i = 0, len = current_password.length; i < len; ++i) {
+                if (current_password.charAt(i) === ' ') {
+
+                    alert("Invalid current password!Spaces are not allowed!");
                     document.getElementById("current_password").focus();
-                    validating = false;
-                }, 1);
+                    return false;
+                }
+
+            }
+            //validate new password
+            if (new_password == null || new_password == "") {
+
+                alert("Invalid new password!Empty or null value not allowed!");
+
+                document.getElementById("new_password").focus();
+
+                return false;
+            } else if (new_password === current_password) {
+
+                alert("New password can not be the same as current password!");
+
+                document.getElementById("new_password").focus();
+
                 return false;
             }
-        }
-    }
+            for (var i = 0, len = new_password.length; i < len; ++i) {
+                if (new_password.charAt(i) === ' ') {
 
-    function validate_new_password(inputval) {
-        var pw = document.getElementById('current_password').value;
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("Invalid new password!Empty or null value not allowed!");
-            setTimeout(function() {
-                document.getElementById("new_password").focus();
-                validating = false;
-            }, 1);
-            return false;
-        } else if (inputval === pw) {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("New password can not be the same as current password!");
-            setTimeout(function() {
-                document.getElementById("new_password").focus();
-                validating = false;
-            }, 1);
-            return false;
-        }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
-                }
-                alert("Invalid new password!Spaces are not allowed!");
-                setTimeout(function() {
+                    alert("Invalid new password!Spaces are not allowed!");
                     document.getElementById("new_password").focus();
-                    validating = false;
-                }, 1);
-                return false;
-            }
-        }
-    }
 
-    function validate_retypenew_password(inputval) {
-        var pw = document.getElementById('new_password').value;
-        if (inputval == null || inputval == "") {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("Invalid retype-new password!Empty or null value not allowed!");
-            setTimeout(function() {
-                document.getElementById("retype_new_password").focus();
-                validating = false;
-            }, 1);
-            return false;
-        } else if (inputval != pw) {
-            if (validating == false) {
-                validating = true;
-            }
-            alert("Retyped New password must be the same as new password!");
-            setTimeout(function() {
-                document.getElementById("retype_new_password").focus();
-                validating = false;
-            }, 1);
-            return false;
-        }
-        for (var i = 0, len = inputval.length; i < len; ++i) {
-            if (inputval.charAt(i) === ' ') {
-                if (validating == false) {
-                    validating = true;
+                    return false;
                 }
-                alert("Invalid retype new password!Spaces are not allowed!");
-                setTimeout(function() {
-                    document.getElementById("retype_new_password").focus();
-                    validating = false;
-                }, 1);
+            }
+
+
+            //validate retype_new_password
+            if (retype_new_password == null || retype_new_password == "") {
+
+                alert("Invalid retype-new password!Empty or null value not allowed!");
+
+                document.getElementById("retype_new_password").focus();
+
+                return false;
+            } else if (retype_new_password != new_password) {
+
+                alert("Retyped New password must be the same as new password!");
+
+                document.getElementById("retype_new_password").focus();
+
                 return false;
             }
-        }
-    }
+            for (var i = 0, len = retype_new_password.length; i < len; ++i) {
+                if (retype_new_password.charAt(i) === ' ') {
 
-</script>
+                    alert("Invalid retype new password!Spaces are not allowed!");
+
+                    document.getElementById("retype_new_password").focus();
+
+                    return false;
+                }
+            }
+
+
+        }
+
+    </script>
+
+
+</body>
 
 </html>

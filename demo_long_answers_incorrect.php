@@ -3,8 +3,11 @@
     include("DB_connect.php");
     //session_start();
     
-    $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."' AND R_T_ID='".$test_id."' AND R_C_ID='".$course_id."'";
+//    $q="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."' AND PR_T_ID='".$test_id."' AND PR_C_ID='".$cid."'";
     
+$q="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."' AND PR_T_ID='".$test_id."' AND PR_C_ID='".$cid."'";
+    
+
 //$q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'";
     
 
@@ -21,8 +24,8 @@
         $i=0;
         while($result=mysqli_fetch_assoc($r))
         {
-            $q_ids[$i]=$result['R_Q_ID'];
-            $marked_answers[$i]=$result['R_Marked_Answer'];
+            $q_ids[$i]=$result['PR_PQ_ID'];
+            $marked_answers[$i]=$result['PR_Marked_Answer'];
             $i++;
         }
         //counter for marked answer array = $j
@@ -41,7 +44,7 @@
         foreach( $q_ids as $id )
         {
             //select record from question table with matching qid
-            $qry="SELECT * FROM questions WHERE Q_ID='".$id."'";
+            $qry="SELECT * FROM passage_questions WHERE PQ_ID='".$id."' and PQ_AssociatedPassage_ID='11'";
             $a=mysqli_query($con,$qry);
             if(!($a))
             {
@@ -76,9 +79,9 @@
                             
         
                                     $row=mysqli_fetch_assoc($a);
-                                    $question=$row['Q_Description'];
-                                    $correct_answer=$row['Q_Answer']; 
-                                    if($marked_answers[$j]!==$correct_answer)
+                                    $question=$row['PQ_Description'];
+                                    $correct_answer=$row['PQ_Answer']; 
+                                    if(($marked_answers[$j]!==$correct_answer)&&($question!=""||$question!=null))
                                     {
                                         $no++;
 
@@ -96,10 +99,11 @@
                 <th><?php echo "Your Answer: ". $marked_answers[$j]. "<br/>"; ?></th>
             </tr>
             <tr id="correct" style="background:#00FF00;">
-                <th><?php echo "Correct Answer: ". $correct_answer. "<br/>"; } ?></th>
+                <th><?php echo "Correct Answer: ". $correct_answer. "<br/>"; }else { $j++; continue;} ?></th>
             </tr>
 
-            <?php    }  $j++; }?>
+            <?php    }  //$j++; 
+        }?>
 
         </table>
     </div>

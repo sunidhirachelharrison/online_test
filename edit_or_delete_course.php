@@ -15,17 +15,17 @@
     }
 	
 
-	//selecting all the test names from test table 
-	$query="SELECT * FROM instructions";
+	//selecting all the course names and course code from course table 
+	$query="SELECT * FROM course";
 	$r=mysqli_query($con,$query);
 
 	if(!($r))
 	{
-		echo '<script>alert("Failed to fetch the instructions!");</script>';
+		echo '<script>alert("Failed to fetch the course details!");</script>';
 	}
 	else
 	{
-		//when instructions are fetched successfully
+		//when course details are fetched successfully
 
 
 ?>
@@ -33,17 +33,18 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
-    <title>Edit/Delete Instructions</title>
+    <title>Edit/Delete Course </title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
@@ -51,19 +52,21 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 
 </head>
+
 <body>
 
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Admin Panel - Edit/Delete Instructions</a></nav>
+        <a class="navbar-brand" href="#">Admin Panel - Edit/Delete Course</a></nav>
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
@@ -73,13 +76,13 @@
                 <div class="col-sm-12 p-4">
                     <!--                    <h4>Add Passage</h4><br/>                   -->
 
-                    <h5>Select the instruction:</h5>
-                    <select name="i_id" id="i_id" class="form-control" onchange="getText(this)">
+                    <h5>Select the course:</h5>
+                    <select name="c_id" id="c_id" class="form-control" onchange="getText(this)">
                         <option value="None">None</option>
 
                         <?php 
 
-			  //fetching and displaying instructions row-wise in a dropdown list
+			  //fetching and displaying course and course code row-wise in a dropdown list
 //        $count=0;
             while($row=mysqli_fetch_assoc($r))
             {
@@ -88,7 +91,7 @@
                 ?>
 
 
-                        <option value="<?php echo $row['I_ID']; ?>"><?php echo $row['I_Description']; ?></option>
+                        <option value="<?php echo $row['C_ID']; ?>"><?php echo $row['C_Name']." ( ".$row['C_Code']." )"; ?></option>
 
                         <?php
                             

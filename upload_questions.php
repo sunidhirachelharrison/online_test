@@ -35,7 +35,7 @@
     <link rel="shortcut icon" href="image/tmu.png">
     <title>Import Questions</title>
 
-    <!-- Bootstrap CSS -->  
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Offline -->
@@ -43,9 +43,10 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .bg-orange{
+        .bg-orange {
             background: #ea5e0d;
         }
+
     </style>
 </head>
 
@@ -63,17 +64,17 @@
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">
-                        <span class="align-middle">Import:</span> 
+                        <span class="align-middle">Import:</span>
                         <a href="dashboard.php"><button type="button" class="btn btn-success float-right">Back</button></a>
                     </div>
                     <div class="card-body">
-                            <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
+                        <form action="" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
                             <div class="p-3">
                                 <label>Choose Excel File:</label>
                                 <input type="file" name="file" accept=".xls,.xlsx">
                                 <button type="submit" id="submit" name="import" class="btn bg-orange text-white">Upload</button>
                             </div>
-                            </form>     
+                        </form>
                     </div>
                 </div>
             </div>
@@ -300,7 +301,7 @@ if (isset($_POST['import']))
 
 
                 <?php
-//**********  fetching the program id and course id for each question  ****************
+//**********  fetching the program id and course id and test id for each question  ****************
                 
         $sql_fetch_pid="SELECT * FROM program WHERE Prog_Name='".$pname."'";
         $pid="";
@@ -323,12 +324,22 @@ if (isset($_POST['import']))
             $cid=$f2['C_ID'];
         }
                 
+                $sql_fetch_tid="SELECT * FROM test WHERE T_Flag='0'";
+        $tid="";
+        $r3=mysqli_query($con,$sql_fetch_tid);
+        if($r3)
+        {
+            $f3=mysqli_fetch_assoc($r3);
+            $tid=$f3['T_ID'];
+//            echo $pid;
+        }
+                
                 
 //******************************************************************
                 
 //                echo '<script>alert('.$pname." ".$cname.');</script>';
         if(!(empty($qid))) {
-            $query = "insert into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag,Q_Prog_ID,Q_C_ID) values(null,'".$qdescription."','".$qimage."','".$optionA."', '".$imageA."','".$optionB."','".$imageB."','".$optionC."','".$imageC."','".$optionD."','".$imageD."','".$optionE."','".$imageE."','".$answer."','".$image."','".$allotedmarks."','".$level."','".$type."','".$_SESSION['U_ID']."',null,'0','".$pid."','".$cid."')";
+            $query = "insert into questions(Q_ID,Q_Description,Q_ImageQuestion,Q_Option_A,Q_ImageA,Q_Option_B,Q_ImageB,Q_Option_C,Q_ImageC,Q_Option_D,Q_ImageD,Q_Option_E,Q_ImageE,Q_Answer,Q_ImageAnswer,Q_Alloted_Marks,Q_Level,Q_Type,Q_A_ID,Q_Passage_ID,Q_Flag,Q_Prog_ID,Q_C_ID,Q_Test_ID) values(null,'".$qdescription."','".$qimage."','".$optionA."', '".$imageA."','".$optionB."','".$imageB."','".$optionC."','".$imageC."','".$optionD."','".$imageD."','".$optionE."','".$imageE."','".$answer."','".$image."','".$allotedmarks."','".$level."','".$type."','".$_SESSION['U_ID']."',null,'0','".$pid."','".$cid."','".$tid."')";
             $result = mysqli_query($con, $query);
 
             if (! empty($result)) {
@@ -366,12 +377,12 @@ if (isset($_POST['import']))
             </table>
 
         </div>
-        
-                <footer class="mt-1">
-                    <div class="text-center">
-                        <p>Copyright &copy; Teerthanker Mahaveer University</p>
-                    </div>
-                </footer>
+
+        <footer class="mt-1">
+            <div class="text-center">
+                <p>Copyright &copy; Teerthanker Mahaveer University</p>
+            </div>
+        </footer>
 
     </div>
 

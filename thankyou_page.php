@@ -12,6 +12,50 @@
         header("location:index.php");
     }
 
+//echo $_SESSION['Course_Code'];
+//echo $_SESSION['U_Program'];
+//fetching test it
+    $fetch_tid="SELECT * FROM test WHERE T_Flag='0'";        
+    $flag_tid=mysqli_query($con,$fetch_tid);
+
+    $tid="";
+    if($flag_tid)
+    {
+        $result3=mysqli_fetch_assoc($flag_tid);
+        $tid=$result3['T_ID'];
+    }
+
+//select the program id and course id to fetch questions and stor results course and program wise
+//echo '<script>alert('.$_SESSION['Course_Code'].');</script>';
+    $sq="SELECT * FROM course 
+    WHERE C_Code='".$_SESSION['Course_Code']."' and C_Flag='1'";
+    
+    $sq2="SELECT * FROM program 
+    WHERE Prog_Name='".$_SESSION['U_Program']."'";
+
+    $ro=mysqli_query($con,$sq);
+    $ro2=mysqli_query($con,$sq2);
+    $cid="";
+    $cname="";
+    $ccode="";
+    $proid="";
+    if(!($ro)||(!$ro2))
+    {
+        echo '<script>alert("Error in fetching program and course details!");</script>';
+    }
+    else
+    {
+        $ro_flag=mysqli_fetch_assoc($ro);
+        $ro_flag2=mysqli_fetch_assoc($ro2);
+        $cid=$ro_flag['C_ID'];
+        $cname=$ro_flag['C_Name'];
+        $ccode=$ro_flag['C_Code'];
+        $proid=$ro_flag2['Prog_ID'];
+//        $_SESSION['U_Prog_ID']=$proid;
+ // $_SESSION['U_C_ID']=$cid;
+    }
+
+
 
     $j=0;
     $correct=0;
@@ -19,7 +63,7 @@
     $total_marks=0;
     $obtained_marks=0;
 
-    $q="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
+    $q="SELECT * FROM result WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND R_T_ID='".$tid."' and R_C_ID='".$cid."'";
     $r=mysqli_query($con,$q);
     if(!($r))
     {
@@ -59,9 +103,9 @@
                     $total_marks = $total_marks + $marks;
                     $obtained_marks = $obtained_marks + $marks;
                     $correct++;
-                    
+//                    echo $marks;
                     //if answer is correct, update the score of that question in result table
-                    $sql1="UPDATE result SET R_Score_Quantitative='".$marks."' WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND R_Q_ID='".$id."' ";
+                    $sql1="UPDATE result SET R_Score_Quantitative='".$marks."' WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND R_Q_ID='".$id."'  AND R_T_ID='".$tid."' and R_C_ID='".$cid."'";
                     $res1=mysqli_query($con,$sql1);
                     if(!($res1))
                     {
@@ -91,7 +135,7 @@
     $total_marks2=0;
     $obtained_marks2=0;
     
-    $q2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."'";
+    $q2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND PR_T_ID='".$tid."' and PR_C_ID='".$cid."'";
     $r2=mysqli_query($con,$q2);
     if(!($r2))
     {
@@ -105,10 +149,12 @@
         $i2=0;
         while($result2=mysqli_fetch_assoc($r2))
         {
-            $q_ids2[$i]=$result2['PR_PQ_ID'];
+            $q_ids2[$i2]=$result2['PR_PQ_ID'];
             $marked_answers2[$i2]=$result2['PR_Marked_Answer'];
             $i2++;
         }
+//        echo $q_ids2[0];
+//echo $marked_answers2[0];
         //counter for marked answer array = $j2
         $j2=0;
         foreach( $q_ids2 as $id2 )
@@ -133,7 +179,7 @@
                     $correct2++;
                     
                     //if answer is correct, update the score of that passage_question in passage_result table
-                    $sql2="UPDATE passage_result SET PR_Score='".$marks2."' WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND PR_PQ_ID='".$id2."' ";
+                    $sql2="UPDATE passage_result SET PR_Score='".$marks2."' WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND PR_PQ_ID='".$id2."' AND PR_T_ID='".$tid."' and PR_C_ID='".$cid."'";
                     $res2=mysqli_query($con,$sql2);
                     if(!($res2))
                     {

@@ -163,7 +163,7 @@ mysqli_close($con);
                     //showing enrollment no if cookies are set
                     echo $_COOKIE['enrollment_no'];
     
-                }  ?>" onfocusout="return validate_username(this.value)" required>
+                }  ?>" onfocusout="" required>
 
              </div>
 
@@ -173,7 +173,7 @@ mysqli_close($con);
                                 //showing password  if cookies are set
                                 echo $_COOKIE['password'];
     
-                            }  ?>" onfocusout="return validate_pwd(this.value)" required>
+                            }  ?>" onfocusout="" required>
              </div>
 
              <div class="forget-link">
@@ -184,7 +184,7 @@ mysqli_close($con);
                  </div>
              </div>
 
-             <button type="Login" name="login" class="btn mt-5 btn-custom btn-block text-uppercase rounded-pill">Login</button>
+             <button type="Login" name="login" onclick="return validate_fields()" class="btn mt-5 btn-custom btn-block text-uppercase rounded-pill">Login</button>
 
              <button type="button" class="btn mt-3 btn-custom btn-block text-uppercase rounded-pill" name="cancel" onClick="window.location = 'index.php'">CANCEL</button>
 
@@ -207,60 +207,51 @@ mysqli_close($con);
 
  </body>
  <script>
-     var validating = false;
+     //validate fields
+     function validate_fields() {
+         var enrollment_no = document.getElementById("enrollment_no").value;
+         var password = document.getElementById("password").value;
 
-     function validate_username(inputval) {
-         if (inputval == null || inputval == "") {
-             if (validating == false) {
-                 validating = true;
-             }
+         //validate enrollment_no
+         if (enrollment_no == null || enrollment_no == "") {
              alert("Enrollment No/Employee ID can't be blank");
-             setTimeout(function() {
-                 document.getElementById("enrollment_no").focus();
-                 validating = false;
-             }, 1);
-             return false;
-         }
-         for (var i = 0, len = inputval.length; i < len; ++i) {
-             if (inputval.charAt(i) === ' ') {
-                 if (validating == false) {
-                     validating = true;
-                 }
-                 alert('Enrollment No/Employee ID  cannot have spaces!');
-                 setTimeout(function() {
-                     document.getElementById("enrollment_no").focus();
-                     validating = false;
-                 }, 1);
-                 return false;
-             }
-         }
-     }
 
-     function validate_pwd(inputval) {
-         if (inputval == null || inputval == "") {
-             if (validating == false) {
-                 validating = true;
-             }
-             alert("Invalid password!");
-             setTimeout(function() {
-                 document.getElementById("password").focus();
-                 validating = false;
-             }, 1);
+             document.getElementById("enrollment_no").focus();
+
              return false;
          }
-         for (var i = 0, len = inputval.length; i < len; ++i) {
-             if (inputval.charAt(i) === ' ') {
-                 if (validating == false) {
-                     validating = true;
-                 }
-                 alert("Invalid password!");
-                 setTimeout(function() {
-                     document.getElementById("password").focus();
-                     validating = false;
-                 }, 1);
+         for (var i = 0, len = enrollment_no.length; i < len; ++i) {
+             if (enrollment_no.charAt(i) === ' ') {
+
+                 alert('Enrollment No/Employee ID  cannot have spaces!');
+
+                 document.getElementById("enrollment_no").focus();
+
                  return false;
              }
          }
+
+
+         //validate password
+         if (password == null || password == "") {
+
+             alert("Invalid password!");
+
+             document.getElementById("password").focus();
+
+             return false;
+         }
+         for (var i = 0, len = password.length; i < len; ++i) {
+             if (password.charAt(i) === ' ') {
+
+                 alert("Invalid password!");
+
+                 document.getElementById("password").focus();
+
+                 return false;
+             }
+         }
+
      }
 
  </script>

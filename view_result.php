@@ -6,7 +6,7 @@
     
     $query="SELECT * FROM test";
     $query2="SELECT * FROM program";
-    $query3="SELECT * FROM course";
+    $query3="SELECT * FROM course join program on program.Prog_ID=course.C_Prog_ID";
     //$conn->exec($query);
     $stmt = $conn->query($query);
     $stmt2=  $conn->query($query2);
@@ -180,7 +180,7 @@
                     //$pname=$result2['Prog_Name'];
                     
                 ?>
-                                        <option value="<?php echo $resu3['C_ID']; ?>"><?php echo $resu3['C_Name']; ?></option>
+                                        <option value="<?php echo $resu3['C_ID']; ?>"><?php echo $resu3['C_Name']." ( ".$resu3['C_Code']." - ".$resu3['Prog_Name']." )"; ?></option>
 
                                         <?php  } ?>
                                     </select><br />
@@ -238,7 +238,7 @@
                     */
                     $qry="SELECT distinct(R_Enrollment_No) FROM result join user
                     ON user.U_Enrollment_No=result.R_Enrollment_No 
-                    WHERE R_T_ID='".$test_id."' 
+                    WHERE R_T_ID='".$test_id."' AND R_C_ID='".$course_id."'
                     ORDER BY U_Program,U_Branch, U_Year,U_Section,U_Enrollment_No";
                     
                         
@@ -386,7 +386,7 @@
                             {
                                 $q1="SELECT * FROM user u join result r 
                                 ON u.U_Enrollment_No=r.R_Enrollment_No
-                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."' AND r.R_C_ID='".$course_id."'  AND u.U_Year='".$year."' AND u.U_Section='".$section."' 
+                                WHERE r.R_Enrollment_No='".$rno."' AND u.U_Program='".$prog_id."' AND r.R_C_ID='".$course_id."'  AND u.U_Year='".$year."' AND u.U_Section='".$section."' AND r.R_T_ID='".$test_id."' 
                                 GROUP BY r.R_Enrollment_No ";   
                             }
                             
@@ -397,7 +397,7 @@
                             WHERE r.R_T_ID='".$test_id."' AND pr.PR_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' AND pr.PR_Enrollment_No='".$rno."' ";        
                             */
                                
-                            $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', COUNT(*) as 'num1',r.R_C_ID as 'rcid' FROM result r WHERE r.R_T_ID='".$test_id."' AND r.R_Enrollment_No='".$rno."' ";    
+                            $q2="SELECT SUM(r.R_Score_Quantitative) as 'total1', COUNT(*) as 'num1',r.R_C_ID as 'rcid' FROM result r WHERE r.R_T_ID='".$test_id."'AND r.R_C_ID='".$course_id."' AND r.R_Enrollment_No='".$rno."' ";    
                                
                             $q5="SELECT SUM(pr.PR_Score) as 'total2', COUNT(*) as 'num2', pr.PR_C_ID  as 'prcid' FROM passage_result pr WHERE  pr.PR_T_ID='".$test_id."' AND pr.PR_Enrollment_No='".$rno."' and pr.PR_C_ID='".$course_id."'";   
                                
@@ -459,7 +459,7 @@
                                         <td><?php echo $m;  ?></td>
 
 
-                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name']; ?>&progname=<?php echo $re1['U_Program'];  ?>">CHECK RESPONSE</a></td>
+                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name']; ?>&progname=<?php echo $re1['U_Program'];  ?>&test_id=<?php echo $test_id;  ?>&courseid=<?php echo $course_id;  ?>">CHECK RESPONSE</a></td>
 
                                     </tr>
                                     <?php $sno++ ; }}  ?>

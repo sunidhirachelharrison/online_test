@@ -14,6 +14,8 @@
         header("location:index.php");
     }
 
+$temp="";
+$detail="";
 $rollno="";
 $name="";
 $usertype="";
@@ -60,8 +62,11 @@ $uregtime="";
         <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
     <div class="container mt-2 mb-3">
 
-        <form action="#" method="post" name="frmExcelImport" id="frmExcelImport" enctype="multipart/form-data">
-            <h1>Select a User to Edit Details/Delete Account:</h1>
+        <form action="#" method="post" name="frmExcelImport1" id="frmExcelImport1" enctype="multipart/form-data">
+
+
+
+            <h1>Enter the Enrollment No/Employee ID of User to Edit Details/Delete Account:</h1>
 
             <div class="row">
                 <div class="col-sm-12 p-4" style="background:#e9ecef">
@@ -79,7 +84,7 @@ $uregtime="";
                         $detail=mysqli_real_escape_string($con,$_POST['uname']);		//entered value in text box
                         //search the user details with specified name or enrollment no.
                         
-                        $q1="SELECT * FROM user WHERE U_Name='".$detail."' or U_Enrollment_No='".$detail."'";
+                        $q1="SELECT * FROM user WHERE U_Enrollment_No='".$detail."'";
                         $re1=mysqli_query($con,$q1);
                         if(!($re1)||$detail=="")
                         {
@@ -99,6 +104,7 @@ $uregtime="";
                                 
                             
                                 $rollno=$row1['U_Enrollment_No'];
+                                $temp=$rollno;  //to edit details later on
                                 $name=$row1['U_Name'];
                                 $usertype=$row1['U_User_Type'];
                                 $program=$row1['U_Program'];
@@ -176,18 +182,18 @@ $uregtime="";
 
             </div>
 
-        </form>
 
 
-        <?php  
+
+            <?php  
 
 
 	//on clicking delete i.e. DELETE button
     if(isset($_POST['delete']))
     {
-        $detail=$_POST['uname'];		//selected value from dropdown list
+        $detail=$_POST['uname'];		//entered value 
         //delete the instruction with selected id
-        $q2="DELETE FROM user WHERE U_Name='".$detail."' or U_Enrollment_No='".$detail."'";
+        $q2="DELETE FROM user WHERE U_Enrollment_No='".$detail."'";
         $re2=mysqli_query($con,$q2);
         if(!($re2))
         {
@@ -205,7 +211,7 @@ $uregtime="";
     ?>
 
 
-        <form action="#" method="post" name="form2" id="form2" enctype="multipart/form-data">
+
             <div id="fields" class="mt-5" style="visibility:hidden;">
 
 
@@ -240,11 +246,9 @@ $uregtime="";
 
                 <label for="reg_time"><b>Registration Time :</b></label>
                 <input type="text" class="form-control" name="reg_time" value="<?php  echo $uregtime;  ?>" disabled /><br />
-                <?php
-//                        }
-                ?>
 
-                <input type="submit" class="btn aa" name="update" value="UPDATE DETAILS" />
+
+                <input type="submit" class="btn aa" onclick="return edit_details()" name="update" value="UPDATE DETAILS" />
 
 
 
@@ -256,12 +260,12 @@ $uregtime="";
    
 
 
-//}
+
 
  if(isset($_POST['update']))
 {
-    
-    $enrollmentno=$_POST['enrollmentno'];
+    $detail=$_POST['uname'];		//entered value
+//    $enrollmentno=$_POST['enrollmentno'];
     $fullname=$_POST['name'];
     $prog=$_POST['program'];
     $yr=$_POST['year'];
@@ -271,12 +275,11 @@ $uregtime="";
     $mobileno=$_POST['mobile_no'];
     $uemailid=$_POST['email_ID'];
     
-     echo '<script>alert('.$enrollmentno.');</script>';
+     echo '<script>alert('.$detail.');</script>';
      
-    $sql="UPDATE user SET U_Enrollment_No='".$enrollmentno."',U_Name='".$fullname."', U_Program='".$prog."', U_Year='".$yr."', U_Section='".$sec."', U_Branch='".$ubranch."',U_Mobile_No='".$mobileno."' ,U_Email_ID='".$uemailid."' WHERE U_Enrollment_No='".$enrollmentno."'";
+    $sql="UPDATE user SET U_Enrollment_No='".$detail."',U_Name='".$fullname."', U_Program='".$prog."', U_Year='".$yr."', U_Section='".$sec."', U_Branch='".$ubranch."',U_Mobile_No='".$mobileno."' ,U_Email_ID='".$uemailid."' WHERE U_Enrollment_No='".$detail."'";
                         
-//    $sql="UPDATE `user` SET `U_Enrollment_No`=[$enrollmentno],`U_Name`=[$fullname],`U_Program`=[$prog],`U_Year`=[$yr],`U_Section`=[$sec],`U_Branch`=[$ubranch],`U_Mobile_No`=[$mobileno],`U_Email_ID`=[$uemailid] WHERE U_Enrollment_No='".$rollno."'";               
-                        
+
     $check=mysqli_query($con,$sql);
 
     if($check)
@@ -310,16 +313,7 @@ $uregtime="";
     function edit_details() {
 
         document.getElementById('fields').style.visibility = 'visible';
-        //var count = document.getElementById("field_count");
-        //        var d = document.getElementById("fields");
-
-        //document.getElementById("add").disable=true;
-
-        //        d.innerHTML = "<label for='enrollmentno'><b>Enrollment No:</b></label> <input type = 'text' class = 'form-control' name = 'enrollmentno' value = '<?php  //echo $r['U_Enrollment_No'];  ?>' /><br/><label for = 'name' > < b > Full Name.: < /b></label ><input type = 'text'  class = 'form-control' name = 'name' value = '<?php  //echo $r['U_Name'];  ?>' / > < br / ><label for = 'program' > < b > Program: < /b></label ><   input type = 'text' class = 'form-control' name = 'program' value = '<?php  //echo $r['U_Program'];  ?>' / > < br / ><label for = 'year' > < b > year: < /b></label ><input type = 'text' class = 'form-control' name = 'year' value = '<?php  //echo $r['U_Year'];  ?>' / > < br / ><label for = 'section' > < b > Section: < /b></label ><input type = 'text' class = 'form-control' name = 'section' value = '<?php  //echo $r['U_Section'];  ?>' / > < br / ><label for = 'branch' > < b > Branch: < /b></label ><input type = 'text' class = 'form-control' name = 'branch'  value = '<?php  //echo $r['U_Branch'];  ?>' / > < br / >";
-
-        //        d.innerHTML = "<br />Enrollment No: <input type='text' class='form-control' name='enrno' value='<?php //echo $_POST['uname']; ?>' required/><br />Name: <input type='text' class='form-control' name='description' value='<?php //echo $_POST['uname']; ?>' required/><br/><input type='submit' name='save' class='btn aa' value='SAVE'/>";
-
-        //        document.getElementById("delete").disabled = true;
+        //        return true;
 
     }
 

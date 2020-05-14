@@ -13,12 +13,12 @@
     $tot_m=$_GET['m2'];
     $name=$_GET['n'];
     $progname=$_GET['progname'];
-//    $courseid=$_GET['courseid'];
-//    $c_code=$_GET['coursecode'];
-//    echo '<script>alert('.$c_code.');';
+    $test_id=$_GET['test_id'];
+    $course_id=$_GET['courseid'];
 
 
-    $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'";
+
+    $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."' AND R_T_ID='".$test_id."' AND R_C_ID='".$course_id."'";
     $r=mysqli_query($con,$q);
     if(!($r))
     {
@@ -26,7 +26,7 @@
     }
     else
     {
-        //echo '<script>alert("Success!");</script>';
+        
         $q_ids=array();
         $marked_answers=array();
         $i=0;
@@ -36,12 +36,12 @@
             $marked_answers[$i]=$result['R_Marked_Answer'];
             $i++;
         }
+
         //counter for marked answer array = $j
         $j=0;
         $correct=0;
         $incorrect=0;
-        //$total_marks=0;
-        //$obtained_marks=0;
+        
         foreach( $q_ids as $id )
         {
             //select record from question table with matching qid
@@ -59,25 +59,13 @@
                 $marks=$row['Q_Alloted_Marks'];
                 if($ans===$marked_answers[$j])
                 {
-                    //$total_marks = $total_marks + $marks;
-                    //$obtained_marks = $obtained_marks + $marks;
-                    $correct++;
                     
-                    //if answer is correct, update the score of that question in result table
-//                    $sql1="UPDATE result SET R_Score_Quantitative='".$marks."' WHERE R_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND R_Q_ID='".$id."' ";
-//                    $res1=mysqli_query($con,$sql1);
-//                    if(!($res1))
-//                    {
-//                        echo '<script>alert("Failed to update the score of this question!");</script>';
-//                    }
-//                    else
-//                    {
-//                       //score successfully updated in result table for specific question 
-//                    }
+                    $correct++;
+                   
                 }
                 else
                 {
-                    //$total_marks = $total_marks + $marks;
+                    
                     $incorrect++;
                 }
             }
@@ -91,9 +79,8 @@
         $j2=0;        
         $correct2=0;
         $incorrect2=0;
-        //$total_marks2=0;
-        //$obtained_marks2=0;
-    $q2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."'";
+        
+    $q2="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."' and PR_T_ID='".$test_id."' AND PR_C_ID='".$course_id."'";
     $r2=mysqli_query($con,$q2);
     if(!($r2))
     {
@@ -101,7 +88,7 @@
     }
     else
     {
-        //echo '<script>alert("Success!");</script>';
+        
         $q_ids2=array();
         $marked_answers2=array();
         $i2=0;
@@ -112,6 +99,7 @@
             $i2++;
         }
         //counter for marked answer array = $j2
+
         $j2=0;
         foreach( $q_ids2 as $id2 )
         {
@@ -130,26 +118,13 @@
                 $marks2=$row2['PQ_Alloted_Marks'];
                 if($ans2===$marked_answers2[$j2])
                 {
-                    //$total_marks2 = $total_marks2 + $marks2;
-                    //$obtained_marks2 = $obtained_marks2 + $marks2;
+                    
                     $correct2++;
-                    
-                    //if answer is correct, update the score of that passage_question in passage_result table
-//                    $sql2="UPDATE passage_result SET PR_Score='".$marks2."' WHERE PR_Enrollment_No='".$_SESSION['U_Enrollment_No']."' AND PR_PQ_ID='".$id2."' ";
-//                    $res2=mysqli_query($con,$sql2);
-//                    if(!($res2))
-//                    {
-//                        echo '<script>alert("Failed to update the score of this passage question!");</script>';
-//                    }
-//                    else
-//                    {
-//                       //score successfully updated in passage_result table for specific question 
-//                    }
-                    
+                                        
                 }
                 else
                 {
-                    //$total_marks2 = $total_marks2 + $marks2;
+                    
                     $incorrect2++;
                 }
             }
@@ -181,12 +156,21 @@
         $cid=$re_row2['C_ID'];
     }
 
-    $sql="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_C_ID='".$cid."'";
+    $sql="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_C_ID='".$course_id."' and Q_Test_ID='".$test_id."'";
     $re=mysqli_query($con,$sql);
     
     if($re)
     {
         $tot_ques=mysqli_num_rows($re);
+    }
+
+//count total long questions
+$sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_C_ID='".$course_id."' and Q_Test_ID='".$test_id."' and Q_Passage_ID is not null";
+    $re_p=mysqli_query($con,$sql_p);
+    $tot_pass="";
+    if($re_p)
+    {
+        $tot_pass=mysqli_num_rows($re_p);
     }
 
 
@@ -271,9 +255,8 @@
                                             <th>Course Name</th>
                                             <th>Correct</th>
                                             <th>Incorrect</th>
-                                            <th>Correct sub-parts(Long Questions)</th>
-                                            <th>Incorrect sub-parts(Long Questions)</th>
-                                            <th>Total Questions Attempted</th>
+                                            <th>Long Questions</th>
+
                                             <th>Total Questions in Test</th>
                                             <th>Obtained Marks</th>
                                             <th>Total Marks</th>
@@ -281,9 +264,10 @@
                                         <th><?php echo $progname; ?></th>
                                         <td><?php echo $correct; ?></td>
                                         <td><?php echo $incorrect ; ?></td>
-                                        <td><?php echo $correct2; ?></td>
-                                        <td><?php echo $incorrect2; ?></td>
-                                        <td><?php echo ($correct + $incorrect + $correct2 + $incorrect2); ?></td>
+                                        <td><?php echo $tot_pass ; ?></td>
+                                        <!--                                        <td><?php //echo ($tot_ques-($correct + $incorrect)) ; ?></td>-->
+
+
                                         <td><?php echo $tot_ques; ?></td>
                                         <td><?php echo $obt_ma; ?></td>
                                         <td><?php echo $tot_m; ?></td>
@@ -324,7 +308,7 @@
                             include("answers.php");
                         
                 //************* now fetch long questions and answers
-                $sql1="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."' AND PR_T_ID=(SELECT T_ID FROM test WHERE T_Flag='0')";
+                $sql1="SELECT * FROM passage_result WHERE PR_Enrollment_No='".$ro."' AND PR_T_ID='".$test_id."' and PR_C_ID='".$course_id."'";
                 $row1=mysqli_query($con,$sql1);
                 if(!($row1))
                 {
@@ -341,7 +325,7 @@
                         $ar_pqid[$i]=$result1['PR_PQ_ID'];
                         $ar_manswer[$i++]=$result1['PR_Marked_Answer'];
                     }
-                    
+
                 
                         ?>
 
@@ -355,7 +339,7 @@
 
                                     <?php
                     
-                    $queryA="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Passage_ID is not null AND Q_Prog_ID='".$pid."' AND Q_C_ID='".$cid."'";
+                    $queryA="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Passage_ID is not null AND Q_Prog_ID='".$pid."' AND Q_C_ID='".$course_id."' AND Q_Test_ID='".$test_id."' ";
                     $rowA=mysqli_query($con,$queryA);
                     $pas_id=array();
                     $x=0;
@@ -365,23 +349,26 @@
                         {
                             $pas_id[$x++]=$resultA['Q_Passage_ID'];
                         }
+
                     }
                     $counter=1;
                     foreach($pas_id as $pid)
                     {
+
                         $queryB="SELECT P_Description FROM passage WHERE P_ID='".$pid."'";
                         $rowB=mysqli_query($con,$queryB);
+                        
                         if($rowB)
                         {
                             $resultB=mysqli_fetch_assoc($rowB);
                             echo $counter++ . ") " . $resultB['P_Description'] . "<br/>";
-                        }
+
                     
                     ?>
 
 
                                     <div class="row" id="answer_print">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="card">
                                                 <div class="card-header">Correct</div>
                                                 <div class="card-body">
@@ -394,21 +381,29 @@
                     //fetch correct answer and marked answer of each of these questions and display them 
                     
                             $j=0;
+                            $wrong_qids=array();
+                            $right_qids=array();
+                            $wrong_qids_ans=array();
+                            $y=1;   //counter for numbering correct subquestions
                     foreach($ar_pqid as $id)
                     {
                         $sql2="SELECT * FROM passage_questions WHERE PQ_ID='".$id."' AND PQ_AssociatedPassage_ID='".$pid."'"; 
                         $row2=mysqli_query($con,$sql2);
+                        
+                        $c=0;
                         if($row2)
                         {
+                            
                             $result2=mysqli_fetch_assoc($row2);
                             $ans=$result2['PQ_Answer']; 
                             if($ans===$ar_manswer[$j++])
                             {
+                               
                             //show sub-question with correct answer
                                                         
                                                         ?>
                                                             <tr>
-                                                                <td><?php echo $j . ") " . $result2['PQ_Description'] . "<br />";?></td>
+                                                                <td><?php echo $y++ . ") " . $result2['PQ_Description'] . "<br />";?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>
@@ -417,7 +412,18 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <?php }}} ?>
+                                                            <?php }
+                        else
+                        {
+                            //else block storee qid of subquestions in array whose answer is wrong
+                            $wrong_qids[$c]=$result2['PQ_ID'];
+                            $wrong_qids_ans[$c]=$result2['PQ_Description'];
+                            $c++;
+                        }
+                        }} 
+                        
+
+                                                            ?>
                                                         </table>
                                                     </div>
 
@@ -437,106 +443,58 @@
 
 
 
-                                        <!--                                <div class="row" id="answer_print">-->
-                                        <div class="col-md-6">
-                                            <div class="card">
-                                                <div class="card-header">Incorrect</div>
-                                                <div class="card-body">
-
-                                                    <div class="table-responsive" id="div_to_print_correct_answers2">
-                                                        <table class="table table-bordered table-hover">
-
-                                                            <?php  
-                                
-                                //fetch correct answer and marked answer of each of these questions and display them
-                            $j=0;
-                            foreach($ar_pqid as $id)
-                            {
-                            $sql2="SELECT * FROM passage_questions WHERE PQ_ID='".$id."' AND PQ_AssociatedPassage_ID='".$pid."'";
-                            $row2=mysqli_query($con,$sql2);
-                            if($row2)
-                            {
-                            $result2=mysqli_fetch_assoc($row2);
-                            $ans=$result2['PQ_Answer'];
-                            if($ans!=$ar_manswer[$j])
-                            {
-                            //show sub-question with correct answer
-                                ?>
-
-                                                            <tr>
-                                                                <td><?php
-                            echo ($j+1) . ") " . $result2['PQ_Description'] . "<br />";?></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <?php echo "Your Answer: " . $ar_manswer[$j++] . "<br />"; 
-                                                                ?>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <?php echo "Correct Answer: " . $ans . "<br />";
-        ?>
-                                                                </td>
-                                                            </tr>
 
 
 
-                                                            <?php          }
-                                                        }
-                                                        }
-
-                                                        ?>
-
-                                                        </table>
-                                                    </div>
-
-                                                    <?php
+                                        <?php
                             }
                 
                                 
                                 ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <?php 
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <?php 
                 } //end of passage fetch foreach loop
                                 ?>
 
-                                    <!-- ****************************************************  -->
+                        <!-- ****************************************************  -->
 
 
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <!--#####################################################################-->
+            </div>
+        </div>
+    </div>
+    <!--#####################################################################-->
 
-                <!--
+    <!--
                 <div class="float-right p-2">
                     <a href="#" id="save" class="btn btn-danger" onClick="javascript:fnExcelReport();">SAVE AS EXCEL SHEET</a>
                 </div>-->
 
-            </div>
-        </div>
-        <div class="float-right p-2">
-            <a href="#" id="print" class="btn btn-danger" onClick="javascript:PrintDiv();">PRINT</a>
-        </div>
+    </div>
+    </div>
+    <div class="float-right p-2">
+        <a href="#" id="print" class="btn btn-danger" onClick="javascript:PrintDiv();">PRINT</a>
+    </div>
 
 
-        <!--                <div class="float-right p-2"><a href="answers.php"><button type="button" class="btn btn-danger">Check Answers</button></a></div>-->
-        <!--                    </div>-->
+    <!--                <div class="float-right p-2"><a href="answers.php"><button type="button" class="btn btn-danger">Check Answers</button></a></div>-->
+    <!--                    </div>-->
 
 
 
 
-        <!--                </div>-->
-        <br />
+    <!--                </div>-->
+    <br />
 
-        <div class="col-1"></div>
+    <div class="col-1"></div>
 
 
 

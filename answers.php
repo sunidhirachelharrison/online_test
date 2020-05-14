@@ -8,7 +8,11 @@
         header("location:index.php");
     }
 
-    $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'";
+    $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'  AND R_T_ID='".$test_id."' AND R_C_ID='".$course_id."'";
+// $q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'  AND R_T_ID='24' AND R_C_ID='6'";
+
+//$q="SELECT * FROM result WHERE R_Enrollment_No='".$ro."'";
+    
     
     $r=mysqli_query($con,$q);
     if(!($r))

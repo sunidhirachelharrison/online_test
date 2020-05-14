@@ -7,6 +7,7 @@
         $qid = $_POST['qid'];
         $c_id = $_POST['c_id'];
         $enrno = $_POST['reid'];
+//        $t_id=$_POST['tid'];
     
         //select the current test details
         $sql="SELECT * FROM test WHERE T_Flag='0'";
@@ -28,12 +29,12 @@
         }
         
         
-        $q1="SELECT * FROM result WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."'";
+        $q1="SELECT * FROM result WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."' AND R_T_ID='".$row1['T_ID']."'";
         $row=mysqli_query($con,$q1);
         $c=mysqli_num_rows($row);
         if($c>0)
         {
-            $q="UPDATE result SET R_Marked_Answer='".$marked_answer."' WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."'";
+            $q="UPDATE result SET R_Marked_Answer='".$marked_answer."' WHERE R_Q_ID='".$qid."' AND R_Enrollment_No='".$enrno."' AND R_C_ID='".$c_id."' AND R_T_ID='".$row1['T_ID']."'";
         }
         else
         {
