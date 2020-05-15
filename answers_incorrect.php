@@ -90,13 +90,13 @@
 
 
             <tr>
-                <td><?php echo $no . ").  " . $question . "<br/>"; ?></td>
+                <td><?php echo "<b>".$no . ")</b>.  " . $question . "<br/>"; ?></td>
             </tr>
-            <tr id="incorrect" style="background:red;">
-                <th><?php echo "Your Answer: ". $marked_answers[$j]. "<br/>"; ?></th>
+            <tr id="incorrect" style="background:#ff726f;">
+                <td><?php echo "<b>Your Answer:</b> ". $marked_answers[$j]."<i class='fa fa-times float-right'></i>". "<br/>"; ?></td>
             </tr>
-            <tr id="correct" style="background:#00FF00;">
-                <th><?php echo "Correct Answer: ". $correct_answer. "<br/>"; } ?></th>
+            <tr id="correct" style="background:lightgreen;">
+                <td><?php echo "<b>Correct Answer:</b> ". $correct_answer."<i class='fa fa-check float-right'></i>". "<br/>"; } ?></td>
             </tr>
 
             <?php    }  $j++; }?>

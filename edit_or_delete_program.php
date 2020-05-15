@@ -14,21 +14,23 @@
         header("location:index.php");
     }
 
-$c_code="";
-$c_name="";
-$courseid="";
+$p_id="";
+$p_name="";
+$program_id="";
+$program_name="";
+
 	
-//selecting all the course names from test table 
-	$query="SELECT * FROM course";
+//selecting all the program names from program table 
+	$query="SELECT * FROM program";
 	$r=mysqli_query($con,$query);
 
 	if(!($r))
 	{
-		echo '<script>alert("Failed to fetch the courses!");</script>';
+		echo '<script>alert("Failed to fetch the programs!");</script>';
 	}
 	else
 	{
-		//when instructions are fetched successfully
+		//when programs are fetched successfully
 
 
 
@@ -45,7 +47,7 @@ $courseid="";
 
     <!-- Title -->
     <link rel="shortcut icon" href="image/tmu.png">
-    <title>Edit/Delete Course</title>
+    <title>Edit/Delete Program</title>
 
     <!-- Bootstrap CSS -->  
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -63,25 +65,24 @@ $courseid="";
 </head>
 <body>
 
-
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Admin Panel - Edit/Delete Course</a></nav>
+        <a class="navbar-brand" href="#">Edit/Delete Program</a></nav>
     <div class="container mt-2 mb-3">
 
         <form action="#" method="post" name="frmExcelImport1" id="frmExcelImport1" enctype="multipart/form-data">
 
 
 
-            <!-- <h1>Select the course to Edit Details/Delete :</h1> -->
+            <!-- <h1>Select the program to Edit Details/Delete :</h1> -->
 
             <div class="row">
                 <div class="col-sm-12 p-4" style="">
 
-                    <h4>Select Course:</h4>
-                    <select name="c_id" id="c_id" class="form-control" onchange="getText(this)">
+                    <h4>Select the Program:</h4>
+                    <select name="p_id" id="p_id" class="form-control" onchange="getText(this)">
                         <option value="None">None</option>
 
                         <?php 
@@ -96,7 +97,7 @@ $courseid="";
                 ?>
 
 
-                        <option value="<?php echo $row['C_ID']; ?>"><?php echo $row['C_Name']." ( ".$row['C_Code']." )"; ?></option>
+                        <option value="<?php echo $row['Prog_ID']; ?>"><?php echo $row['Prog_Name']; ?></option>
 
                         <?php
                             
@@ -111,31 +112,32 @@ $courseid="";
 
 
 
-                    <input type="text" name="hidden_field" id="hidden_field" value="<?php echo htmlspecialchars($_POST['c_id'] ?? '', ENT_QUOTES); ?>" class="form-control" hidden />
+                    <input type="text" name="hidden_field" id="hidden_field" value="<?php echo htmlspecialchars($_POST['p_id'] ?? '', ENT_QUOTES); ?>" class="form-control" hidden />
 
                     <input type="submit" class="btn bg-orange text-white mt-3" name="search" value="SEARCH" id="search" onclick="" />
                     <a href="dashboard.php"><button type="button" class="btn btn-success float-right mt-3">Back</button></a><br>
+
                     <?php
                     
                     //on clicking search i.e. SEARCH button
                     if(isset($_POST['search']))
                     {
 //                        $details=trim($_POST['uname']);
-                        $detail=mysqli_real_escape_string($con,$_POST['c_id']);		//selected value from dropdown box
+                        $detail=mysqli_real_escape_string($con,$_POST['p_id']);		//selected value from dropdown box
                         //search the course details with specified course id.
                         
-                        $q1="SELECT * FROM course WHERE C_ID='".$detail."'";
+                        $q1="SELECT * FROM program WHERE Prog_ID='".$detail."'";
                         $re1=mysqli_query($con,$q1);
                         if(!($re1)||$detail=="")
                         {
-                            echo '<script>alert("Failed to fetch Course details!");</script>';
+                            echo '<script>alert("Failed to fetch program details!");</script>';
                         }
                         else
                         {
-                //            echo '<script>alert("Course deleted successfully!");</script>';
+                //            echo '<script>alert("Program deleted successfully!");</script>';
                             
                             $row1=mysqli_fetch_assoc($re1);
-                            if($row1['C_Name']!="")
+                            if($row1['Prog_Name']!="")
                             {
                                 
                             
@@ -143,9 +145,9 @@ $courseid="";
 //                            $u_reg_date=date_format($obj,"d F Y");
 //                                
 //                            
-                                $courseid=$row1['C_ID'];
-                                $c_code=$row1['C_Code'];
-                                $c_name=$row1['C_Name'];;  //to edit details later on
+                                $program_id=$row1['Prog_ID'];
+//                                $c_code=$row1['C_Code'];
+                                $program_name=$row1['Prog_Name'];;  //to edit details later on
 //                                $name=$row1['U_Name'];
 //                                $usertype=$row1['U_User_Type'];
 //                                $program=$row1['U_Program'];
@@ -166,14 +168,14 @@ $courseid="";
                             <table border="1" class="table table-bordered table-hover" id="result_table">
 
                                 <tr>
-                                    <th>Course Code</th>
-                                    <th>Course Name</th>
+                                    <th>Program ID</th>
+                                    <th>Program Name</th>
 
                                 </tr>
 
                                 <tr>
-                                    <td><?php echo $c_code; ?></td>
-                                    <td><?php echo $c_name; ?></td>
+                                    <td><?php echo $program_id; ?></td>
+                                    <td><?php echo $program_name; ?></td>
 
                                 </tr>
 
@@ -181,17 +183,18 @@ $courseid="";
                         </div>
                     </div>
 
+
                     <input type="button" class="btn bg-orange text-white mt-3" name="edit" value="EDIT" id="edit" onclick="edit_details();" />
 
 
-<input type="submit" class="btn bg-orange text-white mt-3" name="delete" value="DELETE" id="delete" />
+                    <input type="submit" class="btn bg-orange text-white mt-3" name="delete" value="DELETE" id="delete" />
 
 
                     <?php
                             }
                             else
                             {
-                                echo '<script>alert("Course not found! Please select the correct course!");</script>';
+                                echo '<script>alert("Program not found! Please select the correct program!");</script>';
                             }
                         }
 
@@ -201,7 +204,6 @@ $courseid="";
                     ?>
 
 
-                    
 <!-- 
                     <button type="button" class="btn aa mt-3" name="cancel" onClick="window.location = 'dashboard.php'">CANCEL</button> -->
 
@@ -220,15 +222,15 @@ $courseid="";
     {
         $detail=$_POST['hidden_field'];		//entered value 
         //delete the instruction with selected id
-        $q2="DELETE FROM course WHERE C_ID='".$detail."'";
+        $q2="DELETE FROM program WHERE Prog_ID='".$detail."'";
         $re2=mysqli_query($con,$q2);
         if(!($re2))
         {
-            echo '<script>alert("Course deletion failed!");</script>';
+            echo '<script>alert("Program deletion failed!");</script>';
         }
         else
         {
-            echo '<script>alert("Course deleted successfully!");</script>';
+            echo '<script>alert("Program deleted successfully!");</script>';
         }
         
     }
@@ -239,17 +241,19 @@ $courseid="";
 
 
 
-            <div id="fields" class="mt-3 mb-3" style="visibility:hidden;">
+            <div id="fields" class="mt-5" style="visibility:hidden;">
 
 
-                <label for="courseid"><b>Course ID:</b></label>
-                <input type="text" class="form-control" name="courseid" value="<?php  echo $courseid;  ?>" disabled /><br />
+                <label for="x"><b>Program ID:</b></label>
+                <input type="text" class="form-control" name="x" value="<?php  echo $program_id;  ?>" disabled /><br />
 
+                <!--
                 <label for="c_code"><b>Enrollment No:</b></label>
-                <input type="text" class="form-control" name="c_code" value="<?php  echo $c_code;  ?>" /><br />
+                <input type="text" class="form-control" name="c_code" value="<?php  //echo $c_code;  ?>" /><br />
+-->
 
-                <label for="c_name"><b>Course Name:</b></label>
-                <input type="text" class="form-control" name="c_name" value="<?php  echo $c_name;  ?>" /><br />
+                <label for="y"><b>Program Name:</b></label>
+                <input type="text" class="form-control" name="y" value="<?php  echo $program_name;  ?>" /><br />
 
 
                 <input type="submit" class="btn bg-orange text-white" onclick="return edit_details()" name="update" value="UPDATE DETAILS" />
@@ -269,9 +273,9 @@ $courseid="";
  if(isset($_POST['update']))
 {
     $id=$_POST['hidden_field'];	    //to get the course id
-    $code=$_POST['c_code'];		//entered value
+//    $code=$_POST['x'];		//entered value
 //    $enrollmentno=$_POST['enrollmentno'];
-    $name=$_POST['c_name'];
+    $name=$_POST['y'];
      
 //    $prog=$_POST['program'];
 //    $yr=$_POST['year'];
@@ -281,9 +285,9 @@ $courseid="";
 //    $mobileno=$_POST['mobile_no'];
 //    $uemailid=$_POST['email_ID'];
     
-     echo '<script>alert('.$code.');</script>';
+//     echo '<script>alert('.$code.');</script>';
      
-    $sql="UPDATE course SET C_Code='".$code."',C_Name='".$name."' WHERE C_ID='".$id."'";
+    $sql="UPDATE program SET Prog_Name='".$name."' WHERE Prog_ID='".$id."'";
                         
 
     $check=mysqli_query($con,$sql);
@@ -309,7 +313,7 @@ $courseid="";
 
 
     </div>
-
+    
     <footer class="mt-3">
         <div class="text-center">
             <p>Copyright &copy; Teerthanker Mahaveer University</p>

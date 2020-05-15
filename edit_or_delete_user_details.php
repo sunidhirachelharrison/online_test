@@ -33,48 +33,45 @@ $uregtime="";
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Details or Delete User Account</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <link rel="shortcut icon" href="image/tmu.png">
+    <title>Edit/Delete User Details</title>
+
+    <!-- Bootstrap CSS -->  
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <style>
-        .aa {
+        .bg-orange{
             background: #ea5e0d;
-            color: white;
         }
-
-        .aa:hover {
-            background: #e9ecef;
-            color: #ea5e0d;
-        }
-
     </style>
+
 </head>
-
 <body>
-
     <div class="jumbotron text-left" style="margin-bottom:0; padding: 1rem 1rem;">
         <img src="image/logo_uni.png" class="img-fluid" width="300" alt="tmu logo" />
     </div>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a></nav>
+        <a class="navbar-brand" href="#">Admin Panel - Edit/Delete User Details</a></nav>
+
     <div class="container mt-2 mb-3">
-
         <form action="#" method="post" name="frmExcelImport1" id="frmExcelImport1" enctype="multipart/form-data">
-
-
-
-            <h1>Enter the Enrollment No/Employee ID of User to Edit Details/Delete Account:</h1>
-
             <div class="row">
-                <div class="col-sm-12 p-4" style="background:#e9ecef">
-
-                    Enter the name or enrollment no/employee ID:
+                <div class="col-sm-12 p-4" style="">
+                    <h4>Enter the Enrollment no/employee ID:</h4>
                     <input type="text" name="uname" id="uname" value="<?php echo htmlspecialchars($_POST['uname'] ?? '', ENT_QUOTES); ?>" class="form-control" />
-                    <input type="submit" class="btn aa mt-3" name="search" value="SEARCH" id="search" onclick="" /><br />
-
+                    <input type="submit" class="btn bg-orange text-white mt-3" name="search" value="SEARCH" id="search" onclick="" />
+                    <a href="dashboard.php"><button type="button" class="btn btn-success float-right mt-3">Back</button></a><br>
                     <?php
                     
                     //on clicking search i.e. SEARCH button
@@ -118,23 +115,23 @@ $uregtime="";
                             ?>
 
 
-                    <div class="container mt-2 mb-5">
+                    <div class="container mt-5 mb-3">
 
                         <div class="table-responsive mt-3" id="div_to_print">
 
                             <table border="1" class="table table-bordered table-hover" id="result_table">
 
                                 <tr>
-                                    <td>Enrollment No.</td>
-                                    <td>Name</td>
-                                    <td>User Type</td>
-                                    <td>Program</td>
-                                    <td>Year</td>
-                                    <td>Section</td>
-                                    <td>Branch</td>
-                                    <td>Contact No.</td>
-                                    <td>Email ID</td>
-                                    <td>Registration Date</td>
+                                    <th>Enrollment No.</th>
+                                    <th>Name</th>
+                                    <th>User Type</th>
+                                    <th>Program</th>
+                                    <th>Year</th>
+                                    <th>Section</th>
+                                    <th>Branch</th>
+                                    <th>Contact No.</th>
+                                    <th>Email ID</th>
+                                    <th>Registration Date</th>
                                 </tr>
 
                                 <tr>
@@ -151,9 +148,14 @@ $uregtime="";
                                 </tr>
 
                             </table>
+                           
+
                         </div>
                     </div>
+                    <input type="button" class="btn bg-orange text-white mt-3" name="edit" value="EDIT" id="edit" onclick="edit_details();" />
 
+
+<input type="submit" class="btn bg-orange text-white mt-3" name="delete" value="DELETE" id="delete" />
 
 
                     <?php
@@ -170,13 +172,9 @@ $uregtime="";
                     ?>
 
 
-                    <input type="button" class="btn aa mt-3" name="edit" value="EDIT" id="edit" onclick="edit_details();" />
-
-
-                    <input type="submit" class="btn aa mt-3" name="delete" value="DELETE" id="delete" />
-
-
-                    <button type="button" class="btn aa mt-3" name="cancel" onClick="window.location = 'dashboard.php'">CANCEL</button>
+     
+<!-- 
+                    <button type="button" class="btn aa mt-3" name="cancel" onClick="window.location = 'dashboard.php'">CANCEL</button> -->
 
                 </div>
 
@@ -212,7 +210,7 @@ $uregtime="";
 
 
 
-            <div id="fields" class="mt-5" style="visibility:hidden;">
+            <div id="fields" class="mt-3" style="visibility:hidden;">
 
 
                 <label for="enrollmentno"><b>Enrollment No:</b></label>
@@ -248,7 +246,7 @@ $uregtime="";
                 <input type="text" class="form-control" name="reg_time" value="<?php  echo $uregtime;  ?>" disabled /><br />
 
 
-                <input type="submit" class="btn aa" onclick="return edit_details()" name="update" value="UPDATE DETAILS" />
+                <input type="submit" class="btn bg-orange text-white" onclick="return edit_details()" name="update" value="UPDATE DETAILS" />
 
 
 
@@ -302,9 +300,18 @@ $uregtime="";
 ?>
 
 
+
     </div>
 
+
+    <footer class="mt-3">
+        <div class="text-center">
+            <p>Copyright &copy; Teerthanker Mahaveer University</p>
+        </div>
+    </footer>
+
 </body>
+
 
 </html>
 

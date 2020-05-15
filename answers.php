@@ -59,6 +59,8 @@
     <link rel="shortcut icon" href="images/tmu.png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!--    <title>view exam - CTLD</title>-->
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
 
 </head>
 
@@ -82,7 +84,7 @@
     <div class="row" id="answer_print">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">Correct</div>
+                <div class="card-header"><b>Correct</b></div>
                 <div class="card-body">
 
                     <?php
@@ -122,9 +124,9 @@
 //                
                     ?>
 
-                            <td><?php echo $no . ").  " . $question . "<br/>"; ?></td>
-                            <tr style="background:#00FF00;">
-                                <th><?php echo "Correct Answer: ". $correct_answer. "<br/>"; } ?></th>
+                            <td><?php echo "<b>". $no . ")</b>.  " . $question . "<br/>"; ?></td>
+                            <tr style="background:lightgreen;">
+                                <td><?php echo "<b>Correct Answer:</b> ". $correct_answer."<i class='fa fa-check float-right'></i>"."<br/>"; } ?></td>
                             </tr>
 
                             <?php    }  $j++; }?>
@@ -140,7 +142,7 @@
         </div>
         <div class="col-6">
             <div class="card">
-                <div class="card-header">Incorrect</div>
+                <div class="card-header"><b>Incorrect</b></div>
                 <div class="card-body">
                     <?php  include("answers_incorrect.php"); ?>
                     <!--				<div id="">-->

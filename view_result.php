@@ -180,7 +180,7 @@
                     //$pname=$result2['Prog_Name'];
                     
                 ?>
-                                        <option value="<?php echo $resu3['C_ID']; ?>"><?php echo $resu3['C_Name']." ( ".$resu3['C_Code']." - ".$resu3['Prog_Name']." )"; ?></option>
+                                        <option value="<?php echo $resu3['C_ID']; ?>"><?php echo $resu3['C_Name']." ( ".$resu3['Prog_Name']." )"; ?></option>
 
                                         <?php  } ?>
                                     </select><br />
@@ -459,7 +459,7 @@
                                         <td><?php echo $m;  ?></td>
 
 
-                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name']; ?>&progname=<?php echo $re1['U_Program'];  ?>&test_id=<?php echo $test_id;  ?>&courseid=<?php echo $course_id;  ?>">CHECK RESPONSE</a></td>
+                                        <td><a href="result_show.php?r=<?php echo $re1['U_Enrollment_No'];  ?>&m1=<?php echo $marks;  ?>&m2=<?php echo $m;  ?>&n=<?php echo $re1['U_Name']; ?>&progname=<?php echo $re1['U_Program'];  ?>&test_id=<?php echo $test_id;  ?>&courseid=<?php echo $course_id;  ?>&year=<?php echo $re1['U_Year'];  ?>&section=<?php echo $re1['U_Section'];  ?>&branch=<?php echo $re1['U_Branch'];  ?>">CHECK RESPONSE</a></td>
 
                                     </tr>
                                     <?php $sno++ ; }}  ?>

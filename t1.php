@@ -15,11 +15,14 @@
 //fetching total questions of test to set the buttons and questions
 $fetch_tot_ques="SELECT * FROM test WHERE T_Flag='0'";
 $total_no_of_questions="";
+$active_test_id="";
 $fetch_tot_ques_check=mysqli_query($con,$fetch_tot_ques);
 if($fetch_tot_ques_check)
 {
     $fetch_tot_ques_val=mysqli_fetch_assoc($fetch_tot_ques_check);
+    $active_test_id=$fetch_tot_ques_val['T_ID'];
     $total_no_of_questions=$fetch_tot_ques_val['T_Questions'];
+    
 }
 //echo $total_no_of_questions;
       
@@ -52,7 +55,7 @@ if($fetch_tot_ques_check)
 
 
         //select 35 questions from questions table whose flag bit is set to 0(i.e. questions selected for a particular test)
-        $sql="SELECT * FROM questions WHERE Q_Flag='0' and Q_Prog_ID='".$proid."' and Q_C_ID='".$cid."' limit ".$total_no_of_questions."";
+        $sql="SELECT * FROM questions WHERE Q_Flag='0' and Q_Test_ID='".$active_test_id."'  and Q_Prog_ID='".$proid."' and Q_C_ID='".$cid."' limit ".$total_no_of_questions."";
         $row=mysqli_query($con,$sql);
         
         if(!($row))
@@ -726,7 +729,9 @@ if($fetch_tot_ques_check)
         //var x="radio_marked"+window.counter;
         //alert(x);
         var c_id = <?php echo json_encode($cid); ?>;
-
+        var t_id = <?php echo json_encode($active_test_id); ?>;
+        //        alert(radio);
+        //        var t_id = 24;
         for (var i = 0, length = radios.length; i < length; i++) {
             if (radios[i].checked) {
                 radio1 = radios[i].value;
@@ -735,12 +740,14 @@ if($fetch_tot_ques_check)
                 break;
             }
         }
+        //        alert(c_id);
 
         var pass_data = {
             'radio1': radio1,
             'qid': qid,
             'reid': reid,
             'c_id': c_id,
+            't_id': t_id,
         };
         //alert(pass_data);
         $.ajax({

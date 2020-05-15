@@ -15,6 +15,9 @@
     $progname=$_GET['progname'];
     $test_id=$_GET['test_id'];
     $course_id=$_GET['courseid'];
+    $year=$_GET['year'];
+    $section=$_GET['section'];
+    $branch=$_GET['branch'];
 
 
 
@@ -147,13 +150,17 @@
         $pid=$re_row['Prog_ID'];
     }
 
-    $sql_fetch_cid="SELECT C_ID FROM course WHERE C_Prog_ID='".$pid."' and C_Flag='1'";
+    $sql_fetch_cid="SELECT C_ID,C_Code,C_Name FROM course WHERE C_Prog_ID='".$pid."' and C_Flag='1'";
     $re_flag2=mysqli_query($con,$sql_fetch_cid);
     $cid="";
+    $cou_name="";
+    $cou_code="";
     if($re_flag2)
     {
         $re_row2=mysqli_fetch_assoc($re_flag2);
         $cid=$re_row2['C_ID'];
+        $cou_code=$re_row2['C_Code'];
+        $cou_name=$re_row2['C_Name'];
     }
 
     $sql="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_C_ID='".$course_id."' and Q_Test_ID='".$test_id."'";
@@ -188,7 +195,11 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
     <!-- Bootstrap CSS -->
     <link rel="shortcut icon" href="images/tmu.png">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <title>Result - CTLD</title>
+
+    <!-- Font Awesome Offline -->
+    <link rel="stylesheet" href="Font-Awesome-4.7/css/font-awesome.min.css">
+
+    <title>Student Response</title>
 
     <script type="text/javascript">
         function fnExcelReport() {
@@ -231,10 +242,7 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.php">Online Assessment - Faculty of Engineering & Computing Sciences (FOE & CS)</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand" href="#">Admin Panel - Student Response</a>
     </nav>
     <br />
     <!--    <div><?php //echo $c_code. "*********"; ?></div>-->
@@ -245,14 +253,20 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
                 <div class="col-md-12 p-4">
 
                     <div class="card">
-                        <div class="card-header">Student's Score<br />Enrollment No: <?php  echo $ro . "<br/> Name: " .$name ; ?></div>
+                        <div class="card-header">
+                            <a href="view_result.php"><button type="button" class="btn btn-success float-right">Back</button></a>
+                            <b>Student's Score</b><br />Enrollment No: <?php  echo $ro . "<br/> Name: " .$name."<br/> Program: ".$progname."<br/> Year: ".$year." <br/> Section: ".$section."<br/>" ; 
+                            if($branch!=null||$branch!=""){
+                                echo "Branch: ".$branch;
+                            } ?>
+                        </div>
                         <div class="card-body">
                             <div id="">
 
                                 <div class="table-responsive" id="div_to_print">
                                     <table class="table table-bordered table-hover" id="result_table">
                                         <tr>
-                                            <th>Course Name</th>
+                                            <th>Course Name (Course Code)</th>
                                             <th>Correct</th>
                                             <th>Incorrect</th>
                                             <th>Long Questions</th>
@@ -261,7 +275,7 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
                                             <th>Obtained Marks</th>
                                             <th>Total Marks</th>
                                         </tr>
-                                        <th><?php echo $progname; ?></th>
+                                        <th><?php echo $cou_name ." ( ".$cou_code." )"; ?></th>
                                         <td><?php echo $correct; ?></td>
                                         <td><?php echo $incorrect ; ?></td>
                                         <td><?php echo $tot_pass ; ?></td>
@@ -333,7 +347,7 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
 
                     <div class="col-sm-12">
                         <div class="card">
-                            <div class="card-header">Long Questions</div>
+                            <div class="card-header"><b>Long Questions</b></div>
                             <div class="card-body">
                                 <div id="">
 
@@ -366,16 +380,15 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
                     
                     ?>
 
-
+                                    <br>
                                     <div class="row" id="answer_print">
                                         <div class="col-md-12">
                                             <div class="card">
-                                                <div class="card-header">Correct</div>
+                                                <div class="card-header"><b>Correct</b></div>
                                                 <div class="card-body">
 
                                                     <div class="table-responsive" id="div_to_print_correct_answers2">
                                                         <table class="table table-bordered table-hover">
-
                                                             <?php 
                     
                     //fetch correct answer and marked answer of each of these questions and display them 
@@ -407,7 +420,7 @@ $sql_p="SELECT * FROM questions WHERE Q_Flag='0' AND Q_Prog_ID='".$pid."' and Q_
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <?php   echo "Correct Answer: " . $ans . "<br />"; ?>
+                                                                    <?php   echo "<b>Correct Answer:</b> " . $ans . "<br />"; ?>
 
                                                                 </td>
                                                             </tr>

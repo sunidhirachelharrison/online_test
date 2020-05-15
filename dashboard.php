@@ -222,11 +222,12 @@
                         <li><a class="dropdown-item" href="Update_profile_form.php">Edit my profile details</a></li>
                         <li><a class="dropdown-item" href="edit_or_delete_user_details.php">Edit/Delete User details</a></li>
                         <li><a class="dropdown-item" href="edit_or_delete_instructions.php">Edit/Delete Instructions</a></li>
-                        <li><a class="dropdown-item" href="update_marks_for_test.php">Edit Marks of a Test</a></li>
-                        <li><a class="dropdown-item" href="">Edit/Delete Test Details</a></li>
-                        <li><a class="dropdown-item" href="">Edit/Delete Program Details</a></li>
                         <li><a class="dropdown-item" href="edit_or_delete_course.php">Edit/Delete Course Details</a></li>
-                        <li><a class="dropdown-item" href="">Edit/Delete Questions</a></li>
+                        <li><a class="dropdown-item" href="update_marks_for_test.php">Edit Marks of a Test</a></li>
+                        <li><a class="dropdown-item" href="edit_or_delete_test.php">Edit/Delete Test Details</a></li>
+                        <li><a class="dropdown-item" href="edit_or_delete_program.php">Edit/Delete Program Details</a></li>
+
+                        <!--                        <li><a class="dropdown-item" href="">Edit/Delete Questions</a></li>-->
                     </ul>
                 </li>
                 <li class="dropdown p-2">

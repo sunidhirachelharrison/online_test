@@ -21,6 +21,7 @@
     $green_btns="";
     $yellow_btns="";
     $purple_btns="";
+    $window_counter_ques_no="";
     if($q_check)
     {
         $q_val=mysqli_fetch_assoc($q_check);
@@ -29,6 +30,7 @@
         $green_btns=$q_val['S_Green_Btns'];
         $yellow_btns=$q_val['S_Yellow_Btns'];
         $purple_btns=$q_val['S_Purple_Btns'];
+        $window_counter_ques_no=$q_val['S_Current_QNo'];
        
     }
 
@@ -348,6 +350,7 @@
     </style>
     <script type="text/javascript">
         window.counter = 0;
+        //        window.counter = <?php //echo json_encode($window_counter_ques_no); ?>;
         var selected_qid = <?php echo json_encode($qu); ?>;
         var tquestions = <?php echo json_encode($tquestions); ?>;
         showQuestion(selected_qid[counter]);
@@ -360,20 +363,26 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#00FF00';
+                store_btn_color_state(counter, "green");
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
                 document.getElementById(counter).style.background = '#00FF00';
+                store_btn_color_state(counter, "green");
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#00FF00';
+                store_btn_color_state(counter, "green");
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
+                store_btn_color_state(counter, "green");
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#00FF00';
+                store_btn_color_state(counter, "green");
             } else {
                 document.getElementById(counter).style.background = '#FF0000';
+                store_btn_color_state(counter, "red");
             }
             //            
             //            saveResult(marked_value,qid);
@@ -516,31 +525,37 @@
             if (document.getElementById('A').checked) {
                 //marked_value = document.getElementById('A').value;
                 document.getElementById(counter).style.background = '#FFFF00';
+                store_btn_color_state(counter, "yellow");
                 //$(button).find(".glyphicon").addClass("glyphicon-ok");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('B').checked) {
                 //marked_value = document.getElementById('B').value;
                 document.getElementById(counter).style.background = '#FFFF00';
+                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('C').checked) {
                 //marked_value = document.getElementById('C').value;
                 document.getElementById(counter).style.background = '#FFFF00';
+                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('D').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
+                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else if (document.getElementById('E').checked) {
                 //marked_value = document.getElementById('D').value;
                 document.getElementById(counter).style.background = '#FFFF00';
+                store_btn_color_state(counter, "yellow");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             } else {
                 document.getElementById(counter).style.background = '#EE82EE';
+                store_btn_color_state(counter, "purple");
                 window.counter = window.counter + 1;
                 showQuestion(selected_qid[window.counter], window.counter);
             }
@@ -968,5 +983,28 @@
         //        return false;
 
     }, 30000);
+
+</script>
+
+<script>
+    function store_btn_color_state(btn_number, btn_color) {
+
+        var reid = <?php echo json_encode($_SESSION['U_Enrollment_No']); ?>;
+
+        var pass_data = {
+            'btn_number': (btn_number + 1),
+            'btn_color': btn_color,
+            'rollno': reid,
+        };
+        //alert(pass_data);
+        $.ajax({
+            url: "update_btn_color_state_in_db.php",
+            type: "POST",
+            data: pass_data,
+            success: function(data) {}
+        });
+        return false;
+
+    }
 
 </script>

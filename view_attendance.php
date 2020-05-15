@@ -190,7 +190,31 @@
                                         <?php  } ?>
                                     </select><br />
 
+
+
+
+                                    <br>Year:
+                                    <select name="year" id="year">
+                                        <option value="None">None</option>
+                                        <option value="I">I</option>
+                                        <option value="II">II</option>
+                                        <option value="III">III</option>
+                                        <option value="IV">IV</option>
+                                        <option value="V">V</option>
+                                    </select><br />
+
+                                    <br>Section:
+                                    <select name="section" id="section">
+                                        <option value="None">None</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                    </select><br />
                                     <br>
+
                                     <input type="submit" name="show" value="SHOW" class="btn bg-orange text-white" id="show" onclick="return validate_dropdowns()">
                                 </form>
                             </div>
@@ -202,6 +226,8 @@
                         $val=$_POST['test_ids'];
                         $prog=$_POST['program'];
                         $c_id=$_POST['course_ids'];
+                        $year=$_POST['year'];
+                        $section=$_POST['section'];
 //                        $session=$_POST['session'];
 //                        $sem=$_POST['sem'];
                         
@@ -282,7 +308,7 @@
                             {
                                 $sql1="SELECT * FROM user WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."'";
                             }
-                            else
+                            else if($year=="None")
                             {
                                 /*
                                 $sql1="SELECT * FROM user 
@@ -290,6 +316,18 @@
                                  $sql1="SELECT distinct(U_Enrollment_No),U_Name,U_Program,U_Year,U_Section FROM user u join result r
                             on u.U_Enrollment_No=r.R_Enrollment_No
                             WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."' and r.R_C_ID='".$c_id."'";
+                            }
+                            else if($section=="None")
+                            {
+                                $sql1="SELECT distinct(U_Enrollment_No),U_Name,U_Program,U_Year,U_Section FROM user u join result r
+                            on u.U_Enrollment_No=r.R_Enrollment_No
+                            WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."' and U_Year='".$year."' and r.R_C_ID='".$c_id."'";
+                            }
+                            else
+                            {
+                                $sql1="SELECT distinct(U_Enrollment_No),U_Name,U_Program,U_Year,U_Section FROM user u join result r
+                            on u.U_Enrollment_No=r.R_Enrollment_No
+                            WHERE U_Enrollment_No='".$enrno."' AND U_Program='".$prog."' and U_Year='".$year."' and U_Section='".$section."' and r.R_C_ID='".$c_id."'";
                             }
                             
                             $st1 = $conn->query($sql1);
